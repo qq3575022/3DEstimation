@@ -1,5 +1,5 @@
 function [PP, VV, AA] = groundtruth1Dz2(td)  
-
+%z
 p1 = 0;
 p2 = 0.0448;
 
@@ -40,6 +40,5 @@ for n = 1:length(td)
     AA(n) = a;
 end
 
-PP = PP + 0.99;
 end
     

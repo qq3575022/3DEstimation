@@ -1,10 +1,10 @@
-function [PP, VV, AA] = groundtruth1DxRF2(td)  
-
+function [PP, VV, AA] = groundtruth1Dz(td)  
+%z
 p1 = 0;
-p2 = 0.384;
+p2 = 0.0448;
 
-ac = 0.128;
-vc = 0.384/2;%0.128*sqrt(3);%0.384;
+ac = 0.0448;
+vc = 0.0448;%*sqrt(448/447);
 
 ta = vc/ac;
 tv = (p2-p1)/vc - vc/ac;
@@ -40,6 +40,5 @@ for n = 1:length(td)
     AA(n) = a;
 end
 
-PP = PP + 0.99;
 end
     

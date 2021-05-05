@@ -296,17 +296,17 @@ rdot_sim3_ = rdot_sim3 + 0.005*rand(1, length(rdot_sim3));% - 0.0025;
 rdot_sim4_ = rdot_sim4 + 0.005*rand(1, length(rdot_sim4));% - 0.0025;
 
 figure
-subplot(4,1,1),plot(time, r_sim1,'LineWidth',2);title('Simulated Radial Distance r1 from Reader $\#1$ in 3D','interpreter','latex');ylabel('r_1 [m]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,2),plot(time, r_sim2,'LineWidth',2);title('Simulated Radial Distance r2 from Reader $\#2$ in 2D','interpreter','latex');ylabel('r_2 [m]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,3),plot(time, r_sim3,'LineWidth',2);title('Simulated Radial Distance r3 from Reader $\#3$ in 3D','interpreter','latex');ylabel('r_3 [m]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,4),plot(time, r_sim4,'LineWidth',2);title('Simulated Radial Distance r4 from Reader $\#4$ in 3D','interpreter','latex');ylabel('r_4 [m]');xlabel('t [s]');grid on; grid minor;
+subplot(4,1,1),plot(time, r_sim1,'LineWidth',2);title('Simulated Radial Distance r from Reader $\#1$ in 2D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]')
+subplot(4,1,2),plot(time, r_sim2,'LineWidth',2);title('Simulated H from Reader $\#2$ in 2D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]')
+subplot(4,1,3),plot(time, r_sim3,'LineWidth',2);title('Simulated H from Reader $\#3$ in 2D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]')
+subplot(4,1,4),plot(time, r_sim4,'LineWidth',2);title('Simulated H from Reader $\#4$ in 2D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]')
 
 %%
 figure
-subplot(4,1,1),plot(time, H1,'LineWidth',2);title('Simulated H from Reader $\#1$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,2),plot(time, H2,'LineWidth',2);title('Simulated H from Reader $\#2$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,3),plot(time, H3,'LineWidth',2);title('Simulated H from Reader $\#3$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,4),plot(time, H4,'LineWidth',2);title('Simulated H from Reader $\#4$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
+subplot(4,1,1),plot(time, H1,'LineWidth',2);title('Simulated H from Reader $\#1$ in 2D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]')
+subplot(4,1,2),plot(time, H2,'LineWidth',2);title('Simulated H from Reader $\#2$ in 2D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]')
+subplot(4,1,3),plot(time, H3,'LineWidth',2);title('Simulated H from Reader $\#3$ in 2D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]')
+subplot(4,1,4),plot(time, H4,'LineWidth',2);title('Simulated H from Reader $\#4$ in 2D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]')
 
 % 
 %%
