@@ -255,7 +255,11 @@ P = eye(length(x(:,1)));
 % covariance for w
 Q = diag([0.1, 0.1, 10, 0.1, 0.1, 10, 0.1, 0.1, 10, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,]);
 
-
+figure
+subplot(311), plot(magx);
+subplot(312), plot(magy);
+subplot(313), plot(magz);
+%%
 % covariance for v
 RR = [300, 300, 300, 300, 300, 300, 300, 300, var(magx), var(gyrox), var(magy), var(gyroy), var(magz), var(gyroz), var(accx), var(accy), var(accz)]; 
 
