@@ -1,5 +1,6 @@
 clc, clear, close all
 data=readtable('2.csv','Delimiter', ',');  g=9.7953; load('RFxyz.mat');
+load('tdgyro.mat'); load('angle.mat');
 
 figure
 subplot(411), plot(mag1);
@@ -20,7 +21,7 @@ sensor_gyro_check = ismember(data.Var2,'GYRO_UN');  find_gyro_data    = find(sen
 sensor_mag_check  = ismember(data.Var2,'MAG_UN');   find_mag_data     = find(sensor_mag_check == 1);
 
 time   = table2array(data(:,1));               
-data_x = table2array(data(:,3));  data_y = table2array(data(:,4));  data_z = table2array(data(:,5));
+data_x = table2array(data(:,3));  data_y = table2array(data(:,5));  data_z = table2array(data(:,4));
 
 acc_time   = time(find_acc_data);  acc_time   = (acc_time - acc_time(1))/1000000000;                
 gyro_time  = time(find_gyro_data); gyro_time  = (gyro_time - gyro_time(1))/1000000000;
@@ -44,6 +45,11 @@ yEE = find(abs(mag_time-111.984)<0.012); yEE = yEE(1);
 acc_data_x = data_x(find_acc_data);
 acc_data_y = -data_y(find_acc_data);
 acc_data_z = data_z(find_acc_data)-g;
+% 
+% AXY = [1, 0.0623, 0.0055; 0, 1, -0.0041; 0, 0, 1]*[0.9944, 0, 0; 0, 0.9999, 0; 0, 0, 0.9880]*([acc_data_x';acc_data_z';-acc_data_y'] + [0.1739; 0.0071; -0.2999]);
+% 
+% acc_data_x = AXY(1,:); acc_data_y = -AXY(3,:); acc_data_z = AXY(2,:);
+
 
 %%
 gyro_data_x = data_x(find_gyro_data); gyro_data_y = data_y(find_gyro_data); gyro_data_z = data_z(find_gyro_data);
@@ -53,6 +59,11 @@ accx = acc_data_x(yS:yE) - mean(acc_data_x(yS:yE));accy = acc_data_y(yS:yE) - me
 accT = acc_time(yS:yE);
 
 gyrox = gyro_data_x(yyS:yyE) - mean(gyro_data_x(yyS:yyE));gyroy = gyro_data_y(yyS:yyE) - mean(gyro_data_y(yyS:yyE));gyroz = gyro_data_z(yyS:yyE) - mean(gyro_data_z(yyS:yyE));
+
+angle(1,:) = angle(1,:) - mean(angle(1,:)); 
+angle(2,:) = angle(2,:) - mean(angle(2,:)); 
+angle(3,:) = angle(3,:) - mean(angle(3,:)); 
+
 gyroT = gyro_time(yyS:yyE);
 
 magx = mag_data_x(ySS:yEE) - mean(mag_data_x(ySS:yEE));magy = mag_data_y(ySS:yEE) - mean(mag_data_y(ySS:yEE));magz = mag_data_z(ySS:yEE) - mean(mag_data_z(ySS:yEE));
@@ -227,6 +238,10 @@ dmeasrdot1(1) = measrdot1(1);dmeasrdot2(1) = measrdot2(1);dmeasrdot3(1) = measrd
 dmeasr1(2) = measr1(2);dmeasr2(2) = measr2(2);dmeasr3(2) = measr3(2);dmeasr4(2) = measr4(2);
 dmeasrdot1(2) = measrdot1(2);dmeasrdot2(2) = measrdot2(2);dmeasrdot3(2) = measrdot3(2);dmeasrdot4(2) = measrdot4(2);
 
+% AXY = [1, 0.0623, 0.0055; 0, 1, -0.0041; 0, 0, 1]*[0.9944, 0, 0; 0, 0.9999, 0; 0, 0, 0.9880]*([acc_data_x';acc_data_y';acc_data_z'] + [0.1739; 0.0071; -0.2999]);
+% 
+% acc_data_x = AXY(1,:); acc_data_y = AXY(2,:); acc_data_z = AXY(3,:);
+
 
 figure
 subplot(411), plot(time1,  measr1, 'LineWidth', 1), hold on, plot(time, r_sim1, 'LineWidth', 1), title('Radial Distance $r1$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
@@ -269,7 +284,7 @@ k = 1;
 for m = 1:1:length(time)
     %[index, i, j, k] = getIndex(i, j, k, mag_time, gyro_time, acc_time, m, time);
  
-    [y, i, j, k, index, len] = getyNPVA(dmeasr1, dmeasrdot1, dmeasr2, dmeasrdot2, dmeasr3, dmeasrdot3, dmeasr4, dmeasrdot4,  magx, gyrox, magy, gyroy, magz, gyroz, accx, accy, accz, accT, gyroT, magT, time, i, j, k, m);
+    [y, i, j, k, index, len] = getyNPVA(dmeasr1, dmeasrdot1, dmeasr2, dmeasrdot2, dmeasr3, dmeasrdot3, dmeasr4, dmeasrdot4,  angle(1,:), gyrox, angle(2,:), gyroy, angle(3,:), gyroz, accx, accy, accz, accT, gyroT, magT, time, i, j, k, m);
 
     %y
     if m == 1

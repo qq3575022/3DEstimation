@@ -1,4 +1,5 @@
-function [v, r, r2] = noisysim(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T)
+function [v, v2, r, r2, phi_mod] = noisysim(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T,time1,multi)
+%         [v, v2, r, r2, phi_mod] = noisysim3(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T,time1,multi)
 %[v, phi_mod, r, r2, rdot, rdot2,diff] = noisysim(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T)
 
 lambda = 3*10^8/f;
@@ -9,25 +10,30 @@ mul = 1/direct*exp(-i*2*pi*direct/lambda);
 
 %pd = makedist('Weibull');
 % 
-gamma = 0.02*rand(20,1) + 0.02*rand(20,1)*i; zmulti = direct + 8*random('Rayleigh',20,1); %direct + 8*random('Weibull',20,1); %
+traDis = 5:0.2:8;
+gamma = 0.2*ones(20,1) + 0.2*ones(20,1)*i; zmulti = direct + lambda/7*multi; %direct + 8*random('Weibull',20,1); %
 % 
 mul2 = gamma./zmulti.*exp(-i*2*pi.*zmulti/lambda);
 mulSum = sum(mul2);
 
-d3 = direct + 7/2*lambda;
+d3 = direct + 5;
 mulSum3 = 1/d3*exp(-i*2*pi*d3/lambda);
 
-H = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul+ 0.25* mulSum3)^4));%mul + mulSum  % + 0.25* mulSum3
+H = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%mul + mulSum  % + 0.25* mulSum3
+
+% ++++++++++++++++++++++++++++++++++++++++++ Noise of Magnitude +++++++++++++++++++++++++++++++++++++++++++
+H2 = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%mul+ 0.25* mulSum + 0.25*mulSum2
 
 % ++++++++++++++++++++++++++++++++++++++++++ Noise of Magnitude +++++++++++++++++++++++++++++++++++++++++++
 v = H;
+v2 = H2;
 unirand = rand;
 
 if sigma>v*100
     % coeif = raylinv(unirand,sigma)
     v = raylinv(unirand,sigma); 
 else
-    v = icdf('Normal',unirand,v,sigma); %sigma*randn + mu;
+    v = H + raylrnd(0.000003,1,1);%icdf('Normal',unirand,v,sigma); %sigma*randn + mu;
 end
 
 r = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*v^2))^(1/4);

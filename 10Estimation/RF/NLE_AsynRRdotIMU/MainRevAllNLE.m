@@ -1,5 +1,7 @@
 clc, clear, close all
 data=readtable('2.csv','Delimiter', ',');  g=9.7953; load('RFxyz.mat');
+load('tdgyro.mat'); load('angle.mat');
+
 %
 figure
 subplot(411), plot(t1, mag1)
@@ -33,12 +35,17 @@ acc_data_x = data_x(find_acc_data);
 acc_data_y = -data_y(find_acc_data);
 acc_data_z = data_z(find_acc_data)-g;
 
+% AXY = [1, 0.0623, 0.0055; 0, 1, -0.0041; 0, 0, 1]*[0.9944, 0, 0; 0, 0.9999, 0; 0, 0, 0.9880]*([acc_data_x';acc_data_z';-acc_data_y'] + [0.1739; 0.0071; -0.2999]);
+% 
+% acc_data_x = AXY(1,:); acc_data_y = -AXY(3,:); acc_data_z = AXY(2,:);
+
+
 %%
 gyro_data_x = data_x(find_gyro_data); gyro_data_y = data_y(find_gyro_data); gyro_data_z = data_z(find_gyro_data);
 mag_data_x  = data_x(find_mag_data);   mag_data_y = data_y(find_mag_data);   mag_data_z = data_z(find_mag_data);
 
-accx = acc_data_x(xS:xE) - mean(acc_data_x(xS:xE)) - 0.002*(acc_time(xS:xE) - acc_time(xS));
-accy = acc_data_y(xS:xE) - mean(acc_data_y(xS:xE)) - 0.011*(acc_time(xS:xE) - acc_time(xS));
+accx = acc_data_x(xS:xE) - mean(acc_data_x(xS:xE));% - 0.002*(acc_time(xS:xE) - acc_time(xS));
+accy = acc_data_y(xS:xE) - mean(acc_data_y(xS:xE));% - 0.011*(acc_time(xS:xE) - acc_time(xS));
 accz = acc_data_z(xS:xE) - mean(acc_data_z(xS:xE));
 accT = acc_time(xS:xE);
 
@@ -46,6 +53,11 @@ gyrox = gyro_data_x(xxS:xxE) - mean(gyro_data_x(xxS:xxE));gyroy = gyro_data_y(xx
 gyroT = gyro_time(xxS:xxE);
 
 magx = mag_data_x(xSS:xEE) - mean(mag_data_x(xSS:xEE));magy = mag_data_y(xSS:xEE) - mean(mag_data_y(xSS:xEE));magz = mag_data_z(xSS:xEE) - mean(mag_data_z(xSS:xEE));
+
+angle(1,:) = angle(1,:) - mean(angle(1,:)); 
+angle(2,:) = angle(2,:) - mean(angle(2,:)); 
+angle(3,:) = angle(3,:) - mean(angle(3,:)); 
+
 magT = mag_time(xSS:xEE);
 % ========== Start End Time Acceleration ========== 
 
@@ -233,7 +245,7 @@ x = [0.5;0.5;0.5; 0.5;0.5;0.5; 1.1;0.5;0.5; 0.5;0.5;0.5; 0.5;0.5;0.5]*ones(1,len
     
 for m = 1:1:length(time)-N
     
-    [y, i, j, k, index, len] = gety(dmeasr1, dmeasrdot1, dmeasr2, dmeasrdot2, dmeasr3, dmeasrdot3, dmeasr4, dmeasrdot4, magx, gyrox, magy, gyroy, magz, gyroz, accx, accy, accz, accT, gyroT, magT, time, i, j, k, m, N);
+    [y, i, j, k, index, len] = gety(dmeasr1, dmeasrdot1, dmeasr2, dmeasrdot2, dmeasr3, dmeasrdot3, dmeasr4, dmeasrdot4, angle(1,:), gyrox, angle(2,:), gyroy, angle(3,:), gyroz, accx, accy, accz, accT, gyroT, magT, time, i, j, k, m, N);
 
     x(:,m) = lsqnonlin(@(xx)getNLE(y, xx, N, index, len, time, m),[0.5;0.5;0.5; 0.5;0.5;0.5; 0.5;0.5;0.5; 0.5;0.5;0.5; 0.5;0.5;0.5]);
 

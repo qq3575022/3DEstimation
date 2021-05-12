@@ -490,9 +490,9 @@ grid minor;ylabel('Gs');title('Magnitude Strength z');%hold on, plot(mag_time(56
 %%
 figure
 subplot(411), plot(mag_time(5682/8+200:end), mag_data_x(5682/8+200:end),'LineWidth',2); xlim([35, 151]);grid on; xlabel('time[s]')
-grid minor;ylabel('Gauss');title('Magnetic Strength x','interpreter','latex');
-subplot(412), plot(time, r_sim1,'LineWidth',2);title('Simulated Radial Distance r1 from Reader $\#1$ in 3D','interpreter','latex');ylabel('r_1 [m]');xlabel('time[s]');grid on; grid minor;
+grid minor;ylabel('Gauss');title('Magnetic Strength Along $x-$ Axis','interpreter','latex', 'FontSize', 14);
+subplot(412), plot(time, H3,'LineWidth',3);title('Simulated $H_3$ from Reader $\#3$ in 3D','interpreter','latex', 'FontSize', 14); xlim([35, 151]);ylabel('Magnitude [V]');xlabel('time[s]');grid on; grid minor;
 
 subplot(413), plot(mag_time(5682/8+200:end), mag_data_z(5682/8+200:end),'LineWidth',2); xlim([35, 151]);grid on; xlabel('time[s]')
-grid minor;ylabel('Gauss');title('Magnetic Strength z','interpreter','latex');
-subplot(414), plot(time, r_sim3,'LineWidth',2);title('Simulated Radial Distance r3 from Reader $\#3$ in 3D','interpreter','latex');ylabel('r_1 [m]');xlabel('t [s]');grid on; grid minor;
+grid minor;ylabel('Gauss');title('Magnetic Strength Along $z-$ Axis','interpreter','latex', 'FontSize', 14);
+subplot(414), plot(time, H1,'LineWidth',3);title('Simulated $H_1$ from Reader $\#1$ in 3D','interpreter','latex', 'FontSize', 14); xlim([35, 151]);ylabel('Magnitude [V]');xlabel('time[s]');grid on; grid minor;

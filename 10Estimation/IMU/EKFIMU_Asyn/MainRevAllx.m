@@ -1,13 +1,14 @@
 clc, clear, close all
 data=readtable('2.csv','Delimiter', ',');  g=9.7953;
-
+load('tdgyro.mat'); load('angle.mat');
+%%
 % Extract acceleration data for x, y, z axis, name by acc_data_(Axis)
 sensor_acc_check  = ismember(data.Var2,'ACC_UN');   find_acc_data     = find(sensor_acc_check == 1); 
 sensor_gyro_check = ismember(data.Var2,'GYRO_UN');  find_gyro_data    = find(sensor_gyro_check == 1);  
 sensor_mag_check  = ismember(data.Var2,'MAG_UN');   find_mag_data     = find(sensor_mag_check == 1);
 
 time   = table2array(data(:,1));               
-data_x = table2array(data(:,3));  data_y = table2array(data(:,4));  data_z = table2array(data(:,5));
+data_x = table2array(data(:,3));  data_y = table2array(data(:,5));  data_z = table2array(data(:,4));
 
 acc_time   = time(find_acc_data);  acc_time   = (acc_time - acc_time(1))/1000000000;                
 gyro_time  = time(find_gyro_data); gyro_time  = (gyro_time - gyro_time(1))/1000000000;
@@ -30,8 +31,12 @@ xEE = find(abs(mag_time-51.4569)<0.009); xEE = xEE(1);
 % ----acc_data_y----
 % ----acc_data_z----
 acc_data_x = data_x(find_acc_data);
-acc_data_y = data_y(find_acc_data)-g;
-acc_data_z = data_z(find_acc_data);
+acc_data_y = -data_y(find_acc_data);
+acc_data_z = data_z(find_acc_data)-g;
+
+% AXY = [1, 0.0623, 0.0055; 0, 1, -0.0041; 0, 0, 1]*[0.9944, 0, 0; 0, 0.9999, 0; 0, 0, 0.9880]*([acc_data_x';acc_data_z';-acc_data_y'] + [0.1739; 0.0071; -0.2999]);
+% 
+% acc_data_x = AXY(1,:); acc_data_y = -AXY(3,:); acc_data_z = AXY(2,:);
 
 %%
 gyro_data_x = data_x(find_gyro_data); gyro_data_y = data_y(find_gyro_data); gyro_data_z = data_z(find_gyro_data);
@@ -45,6 +50,11 @@ accT = acc_time(xS:xE);
 gyrox = gyro_data_x(xxS:xxE) - mean(gyro_data_x(xxS:xxE));
 gyroy = gyro_data_y(xxS:xxE) - mean(gyro_data_y(xxS:xxE));
 gyroz = gyro_data_z(xxS:xxE) - mean(gyro_data_z(xxS:xxE));
+
+angle(1,:) = angle(1,:) - mean(angle(1,:)); 
+angle(2,:) = angle(2,:) - mean(angle(2,:)); 
+angle(3,:) = angle(3,:) - mean(angle(3,:)); 
+
 gyroT = gyro_time(xxS:xxE);
 
 magx = mag_data_x(xSS:xEE) - mean(mag_data_x(xSS:xEE));
@@ -90,8 +100,8 @@ for m = 1:1:length(time)
     
     %[index, i, j, k] = getIndex(i, j, k, mag_time, gyro_time, acc_time, m, time);
  
-    [y, i, j, k, index] = getyNPVA(magx, gyrox, magy, gyroy, magz, gyroz, accx, accy, accz, accT, gyroT, magT, time, i, j, k, m);
-    
+    [y, i, j, k, index] = getyNPVA(angle(1,:), gyrox, angle(2,:), gyroy, angle(3,:), gyroz, accx, accy, accz, accT, gyroT, magT, time, i, j, k, m);
+
     if m == 1
         x(:,m) = x(:,m);
     else

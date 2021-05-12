@@ -106,3 +106,6 @@ figure
 subplot(3,1,1), plot(tdgyro, angle(1,:), 'LineWidth', 2); title('Estimated orientation along x axis -Roll $\theta_x$','interpreter','latex'); grid on; ylabel('$\theta_x$ [rad]','interpreter','latex')
 subplot(3,1,2), plot(tdgyro, angle(2,:), 'LineWidth', 2); title('Estimated orientation along y axis -Pitch $\theta_y$','interpreter','latex'); grid on;ylabel('$\theta_y$ [rad]','interpreter','latex')
 subplot(3,1,3), plot(tdgyro, angle(3,:), 'LineWidth', 3); title('Estimated orientation along z axis -Yaw $\theta_z$','interpreter','latex'); grid on; xlabel('time [s]');ylabel('$\theta_z$ [rad]','interpreter','latex')
+
+save('tdgyro.mat','tdgyro');
+save('angle.mat','angle');
