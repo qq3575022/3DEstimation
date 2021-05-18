@@ -16,8 +16,8 @@ x4 = [0, 2.52,  1.27];
 
 % Parameters of reader
 PT = 1;         % reader's transmitted power
-GT = 0.01462*0.1;     % reader's trasmitter antenna gain 9.5dBi
-GR = 0.01462*0.1;     % reader's receiver   antenna gain 9.5dBi
+GT = 1.462*3;     % reader's trasmitter antenna gain 9.5dBi
+GR = 1.462*3;     % reader's receiver   antenna gain 9.5dBi
 R = 2;
 
 % Channel noise error covariance
@@ -49,18 +49,18 @@ r_sim4 = NaN(1,length(coord3)); r_sim4_ = NaN(1,length(coord3)); rdot_sim4 = NaN
 multi = randi(10, [20,1]);
 
 for k = 1:1:length(time)-1  
-[H1(k+1),H1_(k+1),r_sim1(k+1),r_sim1_(k+1), rdot_sim1(k+1)] = noisysim3(x1,f1,Gt,M,X,PT,  GT,  0.1*GR,R,sigma,1,k,z,z_prev,time(k+1)-time(k),time(k),multi);
-[H2(k+1),H2_(k+1),r_sim2(k+1),r_sim2_(k+1), rdot_sim2(k+1)] = noisysim3(x2,f2,Gt,M,X,PT,  GT,  2*GR,R,sigma,2,k,z,z_prev,time(k+1)-time(k),time(k),multi);
-[H3(k+1),H3_(k+1),r_sim3(k+1),r_sim3_(k+1), rdot_sim3(k+1)] = noisysim3(x3,f3,Gt,M,X,PT,  GT,  6.5*GR,R,sigma,3,k,z,z_prev,time(k+1)-time(k),time(k),multi);   
-[H4(k+1),H4_(k+1),r_sim4(k+1),r_sim4_(k+1), rdot_sim4(k+1)] = noisysim3(x4,f4,Gt,M,X,PT,  GT,  0.04*GR,R,sigma,4,k,z,z_prev,time(k+1)-time(k),time(k),multi);  
+[H1(k+1),H1_(k+1),r_sim1(k+1),r_sim1_(k+1), rdot_sim1(k+1)] = noisysimOriH(x1,f1,Gt,M,X,PT,  GT,  1.5*GR,R,sigma,1,k,z,z_prev,time(k+1)-time(k),time(k),multi);
+[H2(k+1),H2_(k+1),r_sim2(k+1),r_sim2_(k+1), rdot_sim2(k+1)] = noisysimOriH(x2,f2,Gt,M,X,PT,  GT,  5.5*GR,R,sigma,2,k,z,z_prev,time(k+1)-time(k),time(k),multi);
+[H3(k+1),H3_(k+1),r_sim3(k+1),r_sim3_(k+1), rdot_sim3(k+1)] = noisysimOriH(x3,f3,Gt,M,X,PT,  GT,  6.5*GR,R,sigma,3,k,z,z_prev,time(k+1)-time(k),time(k),multi);   
+[H4(k+1),H4_(k+1),r_sim4(k+1),r_sim4_(k+1), rdot_sim4(k+1)] = noisysimOriH(x4,f4,Gt,M,X,PT,  GT,  GR,R,sigma,4,k,z,z_prev,time(k+1)-time(k),time(k),multi);  
 end
 
 
-figure
-subplot(4,1,1),plot(time, H1,'LineWidth',2);hold on; plot(time, H1_,'LineWidth',2);title('Simulated Magnitude from Reader $\#1$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,2),plot(time, H2,'LineWidth',2);hold on; plot(time, H2_,'LineWidth',2);title('Simulated Magnitude from Reader $\#2$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,3),plot(time, H3,'LineWidth',2);hold on; plot(time, H3_,'LineWidth',2);title('Simulated Magnitude from Reader $\#3$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
-subplot(4,1,4),plot(time, H4,'LineWidth',2);hold on; plot(time, H4_,'LineWidth',2);title('Simulated Magnitude from Reader $\#4$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
+% figure
+% subplot(4,1,1),plot(time, H1,'LineWidth',2);hold on; plot(time, H1_,'LineWidth',2);title('Simulated Magnitude from Reader $\#1$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
+% subplot(4,1,2),plot(time, H2,'LineWidth',2);hold on; plot(time, H2_,'LineWidth',2);title('Simulated Magnitude from Reader $\#2$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
+% subplot(4,1,3),plot(time, H3,'LineWidth',2);hold on; plot(time, H3_,'LineWidth',2);title('Simulated Magnitude from Reader $\#3$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
+% subplot(4,1,4),plot(time, H4,'LineWidth',2);hold on; plot(time, H4_,'LineWidth',2);title('Simulated Magnitude from Reader $\#4$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
 
 % Reader 1
 D0_1 = read_complex_binary ('/Users/Joanna/Documents/PhD/Git/Dissertation-Git/3DEstimation/6Data/0422Reader/0422_reader1_6.bin', 1000000000, 1);
@@ -226,19 +226,7 @@ grid minor
 [-mean(H4_(2:124840) - H4(2:124840)), rms(H4_(2:124840) - H4(2:124840)), sqrt(rms(H4_(2:124840) - H4(2:124840)))]
 
 
-%% Get K Value
-% m41 = getm(H1);
-% m42 = getm(H2);
-% m43 = getm(H3);
-% m44 = getm(H4);
-% 
-% figure
-% subplot(411), plot(time(1:end-10000), medfilt1(m41, 10000),'LineWidth', 2);title('K Value for Reader 1 in Simulation');ylabel('K Value'); grid on; grid minor;ylim([0,100]);xlim([5,140])
-% subplot(412), plot(time(1:end-10000), medfilt1(m42, 10000),'LineWidth', 2);title('K Value for Reader 2 in Simulation');ylabel('K Value'); grid on; grid minor;ylim([70,170]);xlim([5,140])
-% subplot(413), plot(time(1:end-10000), medfilt1(m43, 10000),'LineWidth', 2);title('K Value for Reader 3 in Simulation');ylabel('K Value'); grid on; grid minor;ylim([0,600]);xlim([5,140])
-% subplot(414), plot(time(1:end-10000), medfilt1(m44, 10000),'LineWidth', 2);title('K Value for Reader 4 in Simulation');ylabel('K Value'); grid on; grid minor;ylim([0,100]);xlim([5,140]);xlabel('time [s]');
-
-%%
+%
 % figure
 % subplot(411), plot(time1+13.3287, phaseD1,'LineWidth',2), xlim([14, 145]), hold on, plot(time, rdot_sim1+1.57,'LineWidth',1), xlim([14, 145]), legend('Measurement','Simulation','location','BestOutside'), title('Phase from Reader $\#1$ in 3D','interpreter','latex'), ylabel('Phase [rad]'), xlabel('time [s]')
 % subplot(412), plot(time2+13.3287, phaseD2,'LineWidth',2), xlim([14, 145]), hold on, plot(time, rdot_sim2+1.57,'LineWidth',1), xlim([14, 145]), legend('Measurement','Simulation','location','BestOutside'), title('Phase from Reader $\#2$ in 3D','interpreter','latex'), ylabel('Phase [rad]'), xlabel('time [s]')
@@ -290,3 +278,14 @@ grid minor
 % subplot(413), plot(time3(1:end-10000), medfilt1(m41, 10000),'LineWidth', 2); title('K Value for Reader 3');ylabel('K Value');%legend('m2', 'm4');
 % subplot(414), plot(time4(1:end-10000), medfilt1(m51, 10000),'LineWidth', 2); title('K Value for Reader 4');ylabel('K Value');xlabel('time [s]')%legend('m2', 'm4');
 
+%
+% [m21, m41] = getm(H1);
+% [m22, m42] = getm(H2);
+% [m23, m43] = getm(H3);
+% [m24, m44] = getm(H4);
+% %
+% figure
+% subplot(411), plot(time(1:end-10000), medfilt1(m21, 10000),'LineWidth', 2); hold on; plot(time(1:end-10000), medfilt1(m41, 10000),'LineWidth', 2);title('K Value for Reader 1 in Simulation');legend('m2', 'm4');ylabel('K Value'); grid on; grid minor;ylim([0,12000])
+% subplot(412), plot(time(1:end-10000), medfilt1(m22, 10000),'LineWidth', 2); hold on; plot(time(1:end-10000), medfilt1(m42, 10000),'LineWidth', 2);title('K Value for Reader 2 in Simulation');legend('m2', 'm4');ylabel('K Value'); grid on; grid minor;ylim([0,25000])
+% subplot(413), plot(time(1:end-10000), medfilt1(m23, 10000),'LineWidth', 2); hold on; plot(time(1:end-10000), medfilt1(m43, 10000),'LineWidth', 2);title('K Value for Reader 3 in Simulation');legend('m2', 'm4');ylabel('K Value'); grid on; grid minor;ylim([0,80000])
+% subplot(414), plot(time(1:end-10000), medfilt1(m24, 10000),'LineWidth', 2); hold on; plot(time(1:end-10000), medfilt1(m44, 10000),'LineWidth', 2);title('K Value for Reader 4 in Simulation');legend('m2', 'm4');ylabel('K Value');grid on; grid minor;ylim([0,12000])

@@ -1,7 +1,6 @@
 function [v, v2, r, r2, phi_mod]  = noisysim2(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T,time1,multi)
 %===========================frequency shift================================
 %[v, phi_mod, r, r2, rdot, rdot2,diff] = noisysim(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T)
-f = f + time1*0.001*abs(z(1,k)-x(1))/abs(sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2));%0.01*2*cos(2*pi*f/2*time1);
 lambda = 3*10^8/f;
 
 % ============================================= Magnitude =================================================

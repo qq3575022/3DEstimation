@@ -8,35 +8,40 @@ lambda = 3*10^8/f;
 direct = sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2);
 mul = 1/direct*exp(-i*2*pi*direct/lambda);
 
-%pd = makedist('Weibull');
-% 
-traDis = 5:0.2:8;
-gamma = 0.2*ones(20,1) + 0.2*ones(20,1)*i; zmulti = direct + lambda/7*multi; %direct + 8*random('Weibull',20,1); %
-% 
-mul2 = gamma./zmulti.*exp(-i*2*pi.*zmulti/lambda);
-mulSum = sum(mul2);
+% mul3 = gamma./zmulti2.*exp(-i*2*pi.*zmulti2/lambda);
+% mulSum2 = sum(mul3);
 
-d3 = direct + 5;
-mulSum3 = 1/d3*exp(-i*2*pi*d3/lambda);
+% traDis = 5:0.2:8;
+% gamma = 0.2*ones(20,1) + 0.2*ones(20,1)*i; zmulti = direct + lambda/7*multi; %direct + 8*random('Weibull',20,1); %
+% % 
+% mul2 = gamma./zmulti.*exp(-i*2*pi.*zmulti/lambda);
+% mulSum = sum(mul2);
+% 
+% d3 = direct + 5;
+% mulSum3 = 1/d3*exp(-i*2*pi*d3/lambda);
 
-H = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%mul + mulSum  % + 0.25* mulSum3
+H = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%mul + mulSum  % + 0.25* mulSum3 %mul + mulSum2
+H = H./sqrt(H);
 
 % ++++++++++++++++++++++++++++++++++++++++++ Noise of Magnitude +++++++++++++++++++++++++++++++++++++++++++
 H2 = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%mul+ 0.25* mulSum + 0.25*mulSum2
 
 % ++++++++++++++++++++++++++++++++++++++++++ Noise of Magnitude +++++++++++++++++++++++++++++++++++++++++++
-v = H;
+pd = makedist('Rician','s',sqrt(H),'sigma',0.01*sqrt(H));
+ 
+v = random(pd).^2;
 v2 = H2;
 unirand = rand;
 
-if sigma>v*100
-    % coeif = raylinv(unirand,sigma)
-    v = raylinv(unirand,sigma); 
-else
-    v = H + raylrnd(0.000003,1,1);%icdf('Normal',unirand,v,sigma); %sigma*randn + mu;
-end
+% if sigma>v*100
+%     % coeif = raylinv(unirand,sigma)
+%     v = raylinv(unirand,sigma); 
+% else
+%     v = H + raylrnd(0.000003,1,1);%icdf('Normal',unirand,v,sigma); %sigma*randn + mu;
+% end
 
-r = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*v^2))^(1/4);
+
+r = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*(H)))^(1/4);
 r2 = r;
 
 % % ============================================== Phase ====================================================

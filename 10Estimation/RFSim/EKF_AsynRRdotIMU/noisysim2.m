@@ -1,6 +1,5 @@
-function [v, phi_mod, r, r2, rdot, rdot2,diff] = noisysim(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T,time1,multi)
-%[v, phi_mod, r, r2, rdot, rdot2,diff] = noisysim(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T)
-%f = f + time1*0.001;%0.01*2*cos(2*pi*f/2*time1);
+function [v, v2, phi_mod, r, r2, rdot, rdot2,diff] = noisysim2(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T)
+
 lambda = 3*10^8/f;
 xcoord = z(1,k)-x(1);
 ycoord = z(2,k)-x(2);
@@ -25,34 +24,21 @@ traDis = 5:0.2:8;
 d3 = sqrt((x(1) + 2)^2 + ((x(2) - z(2,k))/2)^2) + sqrt((z(1,k) + 2)^2 + ((x(2) - z(2,k))/2)^2);%direct + lambda*50;
 mulSum3 = 1/d3*exp(-i*2*pi*d3/lambda);
 
-d4 = sqrt((3- x(1))^2 + ((x(2) - z(2,k))/2)^2 + ((x(3) - z(3,k))/2)^2) + sqrt((3 - z(1,k))^2 + ((x(2) - z(2,k))/2)^2+ ((x(3) - z(3,k))/2)^2);%direct + lambda*50;
-mulSum4 = 1/d4*exp(-i*2*pi*d4/lambda);
+H = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul + 0.6*mulSum3)^4));%mul+ 0.25* mulSum + 0.25*mulSum2
+H2 = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%mul+ 0.25* mulSum + 0.25*mulSum2
 
-d5 = sqrt((x(2) + 2)^2 + ((x(1) - z(1,k))/2)^2 + ((x(3) - z(3,k))/2)^2) + sqrt((z(2,k) + 2)^2 + ((x(1) - z(1,k))/2)^2+ ((x(3) - z(3,k))/2)^2);%direct + lambda*50;
-mulSum5 = 1/d5*exp(-i*2*pi*d5/lambda);
-
-d6 = sqrt((3 - x(2))^2 + ((x(1) - z(1,k))/2)^2 + ((x(3) - z(3,k))/2)^2) + sqrt((3 - z(2,k))^2 + ((x(1) - z(1,k))/2)^2+ ((x(3) - z(3,k))/2)^2);%direct + lambda*50;
-mulSum6 = 1/d6*exp(-i*2*pi*d6/lambda);
-
-d7 = sqrt((x(3) + 1)^2 + ((x(2) - z(2,k))/2)^2 + ((x(1) - z(1,k))/2)^2) + sqrt((z(3,k) + 1)^2 + ((x(2) - z(2,k))/2)^2+ ((x(1) - z(1,k))/2)^2);%direct + lambda*50;
-mulSum7 = 1/d7*exp(-i*2*pi*d7/lambda);
-
-d8 = sqrt((5 - x(3))^2 + ((x(1) - z(1,k))/2)^2 + ((x(2) - z(2,k))/2)^2) + sqrt((5 - z(3,k))^2 + ((x(1) - z(1,k))/2)^2+ ((x(2) - z(2,k))/2)^2);%direct + lambda*50;
-mulSum8 = 1/d8*exp(-i*2*pi*d8/lambda);
-
-
-H = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul+ 0.2*mulSum3 + 0.1*mulSum4 + 0.2*mulSum5 + 0.1*mulSum6 + 0.1*mulSum7 +0.1*mulSum8)^4));%  + 0.6*mulSum3 %mul+ 0.25* mulSum + 0.25*mulSum2
-H2 = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%
 % ++++++++++++++++++++++++++++++++++++++++++ Noise of Magnitude +++++++++++++++++++++++++++++++++++++++++++
 v = H;
+v2 = H2;
+
 unirand = rand;
 
-% if sigma>v*100
-%     % coeif = raylinv(unirand,sigma)
-%     v = raylinv(unirand,sigma); 
-% else
-%     v = icdf('Normal',unirand,v,sigma); %sigma*randn + mu;
-% end
+if sigma>v*100
+    % coeif = raylinv(unirand,sigma)
+    v = raylinv(unirand,sigma); 
+else
+    v = icdf('Normal',unirand,v,sigma); %sigma*randn + mu;
+end
 
 %r = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*v^2))^(1/4);
 r = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*H^2))^(1/4);
@@ -81,12 +67,6 @@ delta_phi2 = exp(phi_noise)*delta_phi;
 rdot  = lambda/(4*pi)*diff*1/T;
 rdot2 = lambda/(4*pi)*delta_phi2*1/T;
 
-if abs(rdot) > 100
-    rdot = 0;
-end
-
-%v2 = icdf('Normal',unirand,v,sigma); %sigma*randn + mu;
-%r2 = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*v2^2))^(1/4);
 
 end
 

@@ -208,9 +208,14 @@ phaseDiff4 = -medfilt1(phaseDiff4,200)*1/(42e-03);
 
 %%
 
-measr1 = 0.007*mag11.^(-0.5)+0.9; measr2 = 0.0005*mag22.^(-0.5)+1.78; 
-measr3 = 0.0042*mag33.^(-0.5)+0.94; measr4 = 0.0007*mag44.^(-0.5)+1.5;
+measr1 = 0.007*mag11.^(-0.25)+1.8; measr2 = 0.0005*mag22.^(-0.25)+1.67; 
+measr3 = 0.0042*mag33.^(-0.25)+1.6; measr4 = 0.0000*mag44.^(-0.25)+1.6;
 
+figure
+subplot(411), plot(time1, measr1)
+subplot(412), plot(time2, measr2)
+subplot(413), plot(time3, measr3)
+subplot(414), plot(time1, measr4)
 % measr1 = medfilt1(measr1,10);
 % measr2 = medfilt1(measr2,10);
 % measr3 = medfilt1(measr3,10);
