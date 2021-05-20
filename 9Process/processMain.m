@@ -438,41 +438,41 @@ hold on, plot(acc_time, AA(3,:)+0.0356,'LineWidth',2);ylabel('Acceleration [m/s^
 
 %%
 figure
-subplot(911), plot(acc_time(5682/2+800:end), acc_data_x(5682/2+800:end),'LineWidth',2),ylim([-1, -.4]),xlim([35, 151]);grid on 
+subplot(911), plot(acc_time(5682/2+800:end), acc_data_x(5682/2+800:end),'LineWidth',2),ylim([-.8, -.5]),xlim([35, 161]);grid on 
 grid minor; hold on, plot(acc_time, AA(1,:)-0.64,'LineWidth',2); ylabel('$m/s^2$','interpreter','latex'); title('Acceleration Along x Axis');
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','SouthEast'), %xlabel('time[s]')
 
-subplot(912), plot(acc_time(5682/2+800:end), acc_data_z(5682/2+800:end),'LineWidth',2),ylim([-.3, .7]),xlim([35, 151]);grid on 
+subplot(912), plot(acc_time(5682/2+800:end), acc_data_z(5682/2+800:end),'LineWidth',2),ylim([.05, .5]),xlim([35, 161]);grid on 
 grid minor; hold on, plot(acc_time, -AA(2,:)+0.256,'LineWidth',2);ylabel('$m/s^2$','interpreter','latex');title('Acceleration Along y Axis');
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','SouthEast'), %xlabel('time[s]')
 
-subplot(913), plot(acc_time(5682/2+800:end), acc_data_y(5682/2+800:end),'LineWidth',2),ylim([-.3, .3]),xlim([35, 151]);grid on 
+subplot(913), plot(acc_time(5682/2+800:end), acc_data_y(5682/2+800:end),'LineWidth',2),ylim([-.2, .27]),xlim([35, 161]);grid on 
 grid minor; hold on, plot(acc_time, AA(3,:)+0.0356,'LineWidth',2);ylabel('$m/s^2$','interpreter','latex');title('Acceleration Along z Axis');
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','SouthEast'), %xlabel('time[s]')
 
-subplot(914), plot(gyro_time(5682/2+800:end), gyro_data_x(5682/2+800:end),'LineWidth',2),ylim([-1, 1]),xlim([35, 151]);grid on 
+subplot(914), plot(gyro_time(5682/2+800:end), gyro_data_x(5682/2+800:end),'LineWidth',2),ylim([-1, 1]),xlim([35, 161]);grid on 
 grid minor; hold on, plot(gyro_time(5682/2+800:end), zeros(1, length(gyro_data_x(5682/2+800:end))),'LineWidth',2);ylabel('rad/s');title('Angular Velocity Along x Axis');
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','SouthEast'), %xlabel('time[s]')
 
-subplot(915), plot(gyro_time(5682/2+800:end), gyro_data_y(5682/2+800:end),'LineWidth',2),ylim([-1, 1]),xlim([35, 151]);grid on 
+subplot(915), plot(gyro_time(5682/2+800:end), gyro_data_y(5682/2+800:end),'LineWidth',2),ylim([-.6, .6]),xlim([35, 161]);grid on 
 grid minor; hold on, plot(gyro_time(5682/2+800:end), zeros(1, length(gyro_data_x(5682/2+800:end))),'LineWidth',2);ylabel('rad/s');title('Angular Velocity Along y Axis');
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','SouthEast'), %xlabel('time[s]')
 
-subplot(916), plot(gyro_time(5682/2+800:end), gyro_data_z(5682/2+800:end),'LineWidth',2),ylim([-1, 1]),xlim([35, 151]);grid on 
+subplot(916), plot(gyro_time(5682/2+800:end), gyro_data_z(5682/2+800:end),'LineWidth',2),ylim([-.6, .6]),xlim([35, 161]);grid on 
 grid minor; hold on, plot(gyro_time(5682/2+800:end), zeros(1, length(gyro_data_x(5682/2+800:end))),'LineWidth',2);ylabel('rad/s');title('Angular Velocity Along z Axis');
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','SouthEast'), %xlabel('time[s]')
 
-subplot(917), plot(mag_time(5682/8+200:end), mag_data_x(5682/8+200:end),'LineWidth',2),xlim([35, 151]);ylim([10, 130]);grid on 
+subplot(917), plot(mag_time(5682/8+200:end), mag_data_x(5682/8+200:end),'LineWidth',2),xlim([35, 161]);ylim([10, 130]);grid on 
 grid minor;ylabel('Gauss');title('Magnetic Strength x');hold on, plot(mag_time(5682/8+200:end), mag_data_x(round(5682/8+200))*ones(1, length(mag_time(5682/8+200:end))),'LineWidth',2);
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','NorthEast'), %xlabel('time[s]')
 
-subplot(918), plot(mag_time(5682/8+200:end), mag_data_y(5682/8+200:end),'LineWidth',2),xlim([35, 151]);ylim([-90, 30]);grid on 
+subplot(918), plot(mag_time(5682/8+200:end), mag_data_y(5682/8+200:end),'LineWidth',2),xlim([35, 161]);ylim([-90, 30]);grid on 
 grid minor;ylabel('Gauss');title('Magnetic Strength y');hold on, plot(mag_time(5682/8+200:end), mag_data_y(round(5682/8+200))*ones(1, length(mag_time(5682/8+200:end))),'LineWidth',2);
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','NorthEast'), %xlabel('time[s]')
 
-subplot(919), plot(mag_time(5682/8+200:end), mag_data_z(5682/8+200:end),'LineWidth',2),xlim([35, 151]);ylim([-55, 65]);grid on 
+subplot(919), plot(mag_time(5682/8+200:end), mag_data_z(5682/8+200:end),'LineWidth',2),xlim([35, 161]);ylim([-55, 65]);grid on 
 grid minor;ylabel('Gauss');title('Magnetic Strength z');hold on, plot(mag_time(5682/8+200:end), mag_data_z(round(5682/8+200))*ones(1, length(mag_time(5682/8+200:end))),'LineWidth',2);
-legend('Measurement','GroundTruth','location','BestOutside'), xlabel('time[s]')
+legend('Measurement','GroundTruth','location','NorthEast'), xlabel('time[s]')
 
 %%
 figure
