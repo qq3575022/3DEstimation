@@ -272,10 +272,10 @@ r_sim3 = NaN(1,length(coord3)); r_sim3_ = NaN(1,length(coord3)); rdot_sim3 = NaN
 r_sim4 = NaN(1,length(coord3)); r_sim4_ = NaN(1,length(coord3)); rdot_sim4 = NaN(1,length(coord3)); rdot_sim4_ = NaN(1,length(coord3)); diff4 = NaN(1,length(coord3));
 
 for k = 1:1:length(time)-1  
-[H1(k+1),r_sim1(k+1),r_sim1_(k+1)] = noisysim3(x1,f1,Gt,M,X,PT,GT,GR,R,sigma,1,k,z,z_prev,time(k+1)-time(k));
-[H2(k+1),r_sim2(k+1),r_sim2_(k+1)] = noisysim3(x2,f2,Gt,M,X,PT,2*GT,2*GR,R,sigma,2,k,z,z_prev,time(k+1)-time(k));
-[H3(k+1),r_sim3(k+1),r_sim3_(k+1)] = noisysim3(x3,f3,Gt,M,X,PT,2*GT,2*GR,R,sigma,3,k,z,z_prev,time(k+1)-time(k));   
-[H4(k+1),r_sim4(k+1),r_sim4_(k+1)] = noisysim3(x4,f4,Gt,M,X,PT,GT,GR,R,sigma,4,k,z,z_prev,time(k+1)-time(k));  
+[H1(k+1),r_sim1(k+1),r_sim1_(k+1)] = noisysim(x1,f1,Gt,M,X,PT,GT,GR,R,sigma,1,k,z,z_prev,time(k+1)-time(k));
+[H2(k+1),r_sim2(k+1),r_sim2_(k+1)] = noisysim(x2,f2,Gt,M,X,PT,2*GT,2*GR,R,sigma,2,k,z,z_prev,time(k+1)-time(k));
+[H3(k+1),r_sim3(k+1),r_sim3_(k+1)] = noisysim(x3,f3,Gt,M,X,PT,2*GT,2*GR,R,sigma,3,k,z,z_prev,time(k+1)-time(k));   
+[H4(k+1),r_sim4(k+1),r_sim4_(k+1)] = noisysim(x4,f4,Gt,M,X,PT,GT,GR,R,sigma,4,k,z,z_prev,time(k+1)-time(k));  
 end
 %[v,         phi_mod, r,          r2,            rdot,         rdot2,           diff]
 

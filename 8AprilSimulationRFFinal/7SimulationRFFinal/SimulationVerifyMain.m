@@ -1,5 +1,4 @@
 clc, clear, close all
-
 data=readtable('2.csv','Delimiter', ',');  g=9.7953;
 
 % 1 time,   2 acc/gyro/mag,   3 x,   4 y,   5 z

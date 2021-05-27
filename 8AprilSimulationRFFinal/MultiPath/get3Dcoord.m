@@ -1,4 +1,4 @@
-function [time, coord3] = get3Dcoord()
+function [time, coord3, z, z_prev, H1, H2, H3, H4, H1_, H2_, H3_, H4_, r_sim1, r_sim2, r_sim3, r_sim4, r_sim1_, r_sim2_, r_sim3_, r_sim4_, rdot_sim1, rdot_sim2, rdot_sim3, rdot_sim4, rdot_sim1_, rdot_sim2_, rdot_sim3_, rdot_sim4_, diff1, diff2, diff3, diff4] = get3Dcoord()
 
 data=readtable('2.csv','Delimiter', ',');  g=9.7953;
 
@@ -220,6 +220,27 @@ coord3(3,xyzSSS+1+length(PPxyz3):bSSS) = PPxyz3(end) + 1.03;
 
 coord3(3,bSSS+1:bEEE) = PPxyz3(end) + 1.03 - PP3(end)/10*(time(bSSS+1:bEEE)-time(bSSS));
 coord3(3,bEEE+1:end) = 1.03;
+
+
+%% get z H1 r_sim
+
+% Get RSS and phase from each reader observing the moving tag
+z = NaN(3,length(coord3)-1); z_prev = NaN(3,length(coord3)-1);
+
+z_prev(1,:) = coord3(1,1:end-1); z(1,:) = coord3(1,2:end);% x coordinate
+z_prev(2,:) = coord3(2,1:end-1); z(2,:) = coord3(2,2:end);% y coordinate
+z_prev(3,:) = coord3(3,1:end-1); z(3,:) = coord3(3,2:end);% z coordinate
+
+%
+H1 = NaN(1,length(coord3));   H1_ = NaN(1,length(coord3));  %phi1 = NaN(1,length(coord3));       phi_mu1 = NaN(1,length(coord3));
+H2 = NaN(1,length(coord3));   H2_ = NaN(1,length(coord3));   %phi2 = NaN(1,length(coord3));       phi_mu2 = NaN(1,length(coord3));
+H3 = NaN(1,length(coord3));   H3_ = NaN(1,length(coord3)); %phi3 = NaN(1,length(coord3));       phi_mu3 = NaN(1,length(coord3));
+H4 = NaN(1,length(coord3));   H4_ = NaN(1,length(coord3));  %phi4 = NaN(1,length(coord3));       phi_mu4 = NaN(1,length(coord3));
+
+r_sim1 = NaN(1,length(coord3)); r_sim1_ = NaN(1,length(coord3)); rdot_sim1 = NaN(1,length(coord3)); rdot_sim1_ = NaN(1,length(coord3));  diff1 = NaN(1,length(coord3));
+r_sim2 = NaN(1,length(coord3)); r_sim2_ = NaN(1,length(coord3)); rdot_sim2 = NaN(1,length(coord3)); rdot_sim2_ = NaN(1,length(coord3));  diff2 = NaN(1,length(coord3));
+r_sim3 = NaN(1,length(coord3)); r_sim3_ = NaN(1,length(coord3)); rdot_sim3 = NaN(1,length(coord3)); rdot_sim3_ = NaN(1,length(coord3));  diff3 = NaN(1,length(coord3));
+r_sim4 = NaN(1,length(coord3)); r_sim4_ = NaN(1,length(coord3)); rdot_sim4 = NaN(1,length(coord3)); rdot_sim4_ = NaN(1,length(coord3));  diff4 = NaN(1,length(coord3));
 
 
 end

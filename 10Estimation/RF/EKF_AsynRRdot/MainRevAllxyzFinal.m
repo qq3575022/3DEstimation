@@ -190,9 +190,10 @@ phaseDiff3 = -medfilt1(phaseDiff3,200)*1/(42e-03);
 phaseDiff4 = -medfilt1(phaseDiff4,200)*1/(42e-03);
 
 %%
+close all
 
-measr1 = 0.1*mag11.^(-0.25)+0.65; measr2 = 0.01*mag22.^(-0.25)+1.73; 
-measr3 = 0.1*mag33.^(-0.25)+0.75; measr4 = 0.031*mag44.^(-0.25)+1.26;
+measr1 = 0.00001*mag11.^(-1)+1.57; measr2 = 0.000003*mag22.^(-1)+1.79; 
+measr3 = 0.00003*mag33.^(-1)+1.33; measr4 = 0.000004*mag44.^(-1)+1.54;
 
 % figure
 % subplot(411), plot(time1, measr1)
@@ -248,14 +249,14 @@ dmeasrdot1(2) = measrdot1(2);dmeasrdot2(2) = measrdot2(2);dmeasrdot3(2) = measrd
 % subplot(817), plot(time,  dmeasr4, 'LineWidth', 1), title('Radial Distance $r4$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
 % subplot(818), plot(time, r_sim4_, 'LineWidth', 1),title('Radial Distance $r4$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
 
-
+%
 figure
 subplot(411), plot(time,  dmeasr1, 'LineWidth', 1), hold on, plot(time, r_sim1_, 'LineWidth', 1), title('Radial Distance $r1$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
 subplot(412), plot(time,  dmeasr2, 'LineWidth', 1), hold on, plot(time, r_sim2_, 'LineWidth', 1),title('Radial Distance $r2$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
 subplot(413), plot(time,  dmeasr3, 'LineWidth', 1), hold on, plot(time, r_sim3_, 'LineWidth', 1),title('Radial Distance $r3$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
 subplot(414), plot(time,  dmeasr4, 'LineWidth', 1), hold on, plot(time, r_sim4_, 'LineWidth', 1),title('Radial Distance $r4$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
 
-
+%%
 
 figure
 subplot(411), plot(time, dmeasrdot1); hold on; plot(time, rdot_sim1, 'LineWidth', 1), title('Radial Velocity $\dot r_1$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
@@ -264,7 +265,7 @@ subplot(413), plot(time, dmeasrdot3); hold on; plot(time, rdot_sim3, 'LineWidth'
 subplot(414), plot(time, dmeasrdot4); hold on; plot(time, rdot_sim4, 'LineWidth', 1), title('Radial Velocity $\dot r_4$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
 
 %
-%%
+
 % Measurement Vector [acc_x, acc_y, acc_z, orientation, angular velocity]
 
 % State vector [xdotdot, ydotdot, orientation, angular velocity]
@@ -356,8 +357,8 @@ subplot(9,1,6), plot(time, x(6,:), 'b', 'LineWidth', 2); %hold on; plot(td3, phi
 subplot(9,1,7), plot(time, x(7,:), 'b', 'LineWidth', 2); %hold on; plot(td3, phi_gt(4,:), 'r', 'LineWidth', 2); legend('estimated', 'gt'); title('Estimated angular velocity along y axis'); grid on;
 subplot(9,1,8), plot(time, x(8,:), 'b', 'LineWidth', 2); %hold on; plot(td3, phi_gt(5,:), 'r', 'LineWidth', 2); legend('estimated', 'gt'); title('Estimated orientation along z axis'); grid on;
 subplot(9,1,9), plot(time, x(9,:), 'b', 'LineWidth', 2); %hold on; plot(td3, phi_gt(6,:), 'r', 'LineWidth', 2); legend('estimated', 'gt'); title('Estimated angular velocity along z axis'); grid on;
-
+%%
 figure
-subplot(311), plot(time, x(1,:), 'LineWidth', 2); hold on; plot(time, PP1+1.03, 'LineWidth', 2); legend('Estimated Position','Ground Truth','Location','SouthEast'); title('Position Along x Axis [m]'); xlabel('t [s]'); ylabel('Position [m]'); grid on; grid minor;xlim([107.99, 111.984])
-subplot(312), plot(time, x(4,:), 'LineWidth', 2); hold on; plot(time, PP2+1.31, 'LineWidth', 2); legend('Estimated Position','Ground Truth','Location','SouthEast'); title('Position Along y Axis [m]'); xlabel('t [s]'); ylabel('Position [m]'); grid on; grid minor;xlim([107.99, 111.984])
-subplot(313), plot(time, x(7,:), 'LineWidth', 2); hold on; plot(time, PP3+1.03, 'LineWidth', 2); legend('Estimated Position','Ground Truth','Location','SouthEast'); title('Position Along z Axis [m]'); xlabel('t [s]'); ylabel('Position [m]'); grid on; grid minor;xlim([107.99, 111.984])
+subplot(311), plot(time, x(1,:), 'LineWidth', 2); hold on; plot(time, PP1+1.03, 'LineWidth', 2); legend('Estimated Position','Ground Truth','Location','SouthEast'); title('Position Along x Axis [m]'); xlabel('time [s]'); ylabel('Position [m]'); grid on; grid minor;xlim([107.99, 111.984])
+subplot(312), plot(time, x(4,:), 'LineWidth', 2); hold on; plot(time, PP2+1.31, 'LineWidth', 2); legend('Estimated Position','Ground Truth','Location','SouthEast'); title('Position Along y Axis [m]'); xlabel('time [s]'); ylabel('Position [m]'); grid on; grid minor;xlim([107.99, 111.984])
+subplot(313), plot(time, x(7,:), 'LineWidth', 2); hold on; plot(time, PP3+1.03, 'LineWidth', 2); legend('Estimated Position','Ground Truth','Location','SouthEast'); title('Position Along z Axis [m]'); xlabel('time [s]'); ylabel('Position [m]'); grid on; grid minor;xlim([107.99, 111.984])

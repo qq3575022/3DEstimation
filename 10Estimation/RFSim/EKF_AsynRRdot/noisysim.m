@@ -7,8 +7,14 @@ ycoord = z(2,k)-x(2);
 zcoord = z(3,k)-x(3);
 % ============================================= Magnitude =================================================
 direct = sqrt((xcoord)^2+(ycoord)^2+(zcoord)^2);
+direct_prev = sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2+(z_prev(3,k)-x(3))^2);
+
 mul = 1/direct*exp(-i*2*pi*direct/lambda);
 
+mul_prev =  1/direct_prev*exp(-i*2*pi*direct_prev/lambda);
+
+d3_prev = sqrt((x(1) + 2)^2 + ((x(2) - z_prev(2,k))/2)^2 + ((x(3) - z_prev(3,k))/2)^2) + sqrt((z_prev(1,k) + 2)^2 + ((x(2) - z_prev(2,k))/2)^2+ ((x(3) - z_prev(3,k))/2)^2);%direct + lambda*50;
+mulSum3_prev = 1/d3_prev*exp(-i*2*pi*d3_prev/lambda);
 %pd = makedist('Weibull');
 % 
 traDis = 5:0.2:8;
@@ -22,7 +28,7 @@ traDis = 5:0.2:8;
 % mul3 = gamma./zmulti2.*exp(-i*2*pi.*zmulti2/lambda);
 % mulSum2 = sum(mul3);
 
-d3 = sqrt((x(1) + 2)^2 + ((x(2) - z(2,k))/2)^2) + sqrt((z(1,k) + 2)^2 + ((x(2) - z(2,k))/2)^2);%direct + lambda*50;
+d3 = sqrt((x(1) + 2)^2 + ((x(2) - z(2,k))/2)^2+ ((x(3) - z(3,k))/2)^2) + sqrt((z(1,k) + 2)^2 + ((x(2) - z(2,k))/2)^2+ ((x(3) - z(3,k))/2)^2);%direct + lambda*50;
 mulSum3 = 1/d3*exp(-i*2*pi*d3/lambda);
 
 d4 = sqrt((3- x(1))^2 + ((x(2) - z(2,k))/2)^2 + ((x(3) - z(3,k))/2)^2) + sqrt((3 - z(1,k))^2 + ((x(2) - z(2,k))/2)^2+ ((x(3) - z(3,k))/2)^2);%direct + lambda*50;
@@ -41,7 +47,7 @@ d8 = sqrt((5 - x(3))^2 + ((x(1) - z(1,k))/2)^2 + ((x(2) - z(2,k))/2)^2) + sqrt((
 mulSum8 = 1/d8*exp(-i*2*pi*d8/lambda);
 
 
-H = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul+ 0.2*mulSum3 + 0.1*mulSum4 + 0.2*mulSum5 + 0.1*mulSum6 + 0.1*mulSum7 +0.1*mulSum8)^4));%  + 0.6*mulSum3 %mul+ 0.25* mulSum + 0.25*mulSum2
+H = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul+ 0.2*mulSum3)^4));% + 0.1*mulSum4 + 0.2*mulSum5 + 0.1*mulSum6 + 0.1*mulSum7 +0.1*mulSum8)^4));%  + 0.6*mulSum3 %mul+ 0.25* mulSum + 0.25*mulSum2
 H2 = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%
 % ++++++++++++++++++++++++++++++++++++++++++ Noise of Magnitude +++++++++++++++++++++++++++++++++++++++++++
 v = H;
@@ -60,10 +66,14 @@ r2 = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*H2^2))^(1/4);
 
 % % ============================================== Phase ====================================================
 
-phi_prev_mod = 4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2+(z_prev(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_mod      = 4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+% phi_prev_mod = 4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2+(z_prev(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
+% phi_mod      = 4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
 
-phi_mod = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul + mulSum3)^4));%mul + mulSum  % + 0.25* mulSum3
+phi_prev_mod = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev + 0.2*mulSum3_prev)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
+phi_mod      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul + 0.2*mulSum3)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+
+
+%phi_mod = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul + mulSum3)^4));%mul + mulSum  % + 0.25* mulSum3
 
 
 diff = phi_mod - phi_prev_mod;
