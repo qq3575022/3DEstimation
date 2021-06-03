@@ -50,20 +50,21 @@ mulSum7_prev = 1/d7_prev*exp(-i*2*pi*d7_prev/lambda1);
 mulSum8      = 1/d8*exp(-i*2*pi*d8/lambda1);
 mulSum8_prev = 1/d8_prev*exp(-i*2*pi*d8_prev/lambda1);
 
-H      = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda1^2*X^2*M)/(4*pi)^2*(mul1      + 0.2*mulSum3 + 0.2*mulSum4 + 0.2*mulSum5 + 0.1*mulSum6 + 0.1*mulSum7 +0.2*mulSum8)^2));%mul + mulSum  % + 0.25* mulSum3 %mul + mulSum2
-H_prev = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda1^2*X^2*M)/(4*pi)^2*(mul_prev  + 0.2*mulSum3_prev + 0.2*mulSum4_prev + 0.2*mulSum5_prev + 0.1*mulSum6_prev + 0.1*mulSum7_prev +0.2*mulSum8_prev)^2));
+H      = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda1^2*X^2*M)/(4*pi)^2*(mul1      + 0.05*mulSum3 + 0.05*mulSum4 + 0.05*mulSum5 + 0.05*mulSum6 + 0.05*mulSum7 +0.05*mulSum8)^2));%mul + mulSum  % + 0.25* mulSum3 %mul + mulSum2
+H_prev = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda1^2*X^2*M)/(4*pi)^2*(mul_prev  + 0.05*mulSum3_prev + 0.05*mulSum4_prev + 0.05*mulSum5_prev + 0.05*mulSum6_prev + 0.05*mulSum7_prev +0.05*mulSum8_prev)^2));
+H2      = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda1^2*X^2*M)/(4*pi)^2*(mul1)^2));%mul + mulSum  % + 0.25* mulSum3 %mul + mulSum2
 
 % ++++++++++++++++++++++++++++++++++++++++++ Noise of Magnitude +++++++++++++++++++++++++++++++++++++++++++
 %pd = makedist('Rician','s',sqrt(H),'sigma',0.01*sqrt(H));
 %v = random(pd).^2;
 
 v  = H;
-v2 = H;
+v2 = H2;
 
 unirand = rand;
 
 r = ((2*PT*GT*GR*Gt^2*lambda1^2*X^2*M*R)/((4*pi)^2*(H^2)))^(1/2);
-r2 = r;
+r2 = ((2*PT*GT*GR*Gt^2*lambda1^2*X^2*M*R)/((4*pi)^2*(H2^2)))^(1/2);
 
 % % ============================================== Phase ====================================================
 
@@ -90,7 +91,7 @@ delta_phi2 = exp(phi_noise)*delta_phi;
 rdot = -lambda1/(4*pi)*diff*1/T;
 rdot2 = -lambda1/(4*pi)*diff*1/T;
 
-if abs(rdot) > 1
+if abs(rdot) > 0.3
     rdot = 0;
 end
 

@@ -264,6 +264,13 @@ subplot(412), plot(time1(2:end), phaseDiff2); hold on; plot(time, rdot_sim2, 'Li
 subplot(413), plot(time3(2:end), phaseDiff3); hold on; plot(time, rdot_sim3, 'LineWidth', 1), title('Radial Velocity $\dot r_3$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth','Location','SouthEast'), xlim([107.99, 111.984]);
 subplot(414), plot(time1(2:end), phaseDiff4); hold on; plot(time, rdot_sim4, 'LineWidth', 1), title('Radial Velocity $\dot r_4$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);
 
+%%
+figure
+subplot(411), plot(time, rdot_sim1, 'LineWidth', 2), title('Radial Velocity $\dot r_1$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), %xlim([107.99, 111.984]);
+subplot(412), plot(time, rdot_sim2, 'LineWidth', 2), title('Radial Velocity $\dot r_2$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), %xlim([107.99, 111.984]);
+subplot(413), plot(time, rdot_sim3, 'LineWidth', 2), title('Radial Velocity $\dot r_3$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth','Location','SouthEast'), %xlim([107.99, 111.984]);
+subplot(414), plot(time, rdot_sim4, 'LineWidth', 2), title('Radial Velocity $\dot r_4$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'),% xlim([107.99, 111.984]);
+
 %
 %%
 % Measurement Vector [acc_x, acc_y, acc_z, orientation, angular velocity]

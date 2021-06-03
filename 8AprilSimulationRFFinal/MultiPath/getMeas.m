@@ -1,4 +1,4 @@
-function [magD12, magD22, magD32, magD42] = getMeas(time)
+function [magD12, magD22, magD32, magD42, phaseD12, phaseD22, phaseD32, phaseD42] = getMeas(time)
 
 % +++++++++++++++++++++++++++++++++++++++++++ Reader 1 ++++++++++++++++++++++++++++++++++++++
 D0_1 = read_complex_binary ('/Users/Joanna/Documents/PhD/Git/Dissertation-Git/3DEstimation/6Data/0422Reader/0422_reader1_6.bin', 1000000000, 1);
@@ -69,6 +69,10 @@ t1 = time1(145388:315021);           t2 = time2(145388:315021);       t3 = time3
 
 magD12 = NaN(1,length(time)); magD22 = NaN(1,length(time)); magD32 = NaN(1,length(time)); magD42 = NaN(1,length(time));
 magD12(1) = magD1(1);         magD22(1) = magD1(1);         magD32(1) = magD1(1);         magD42(1) = magD1(1); 
+
+phaseD12 = NaN(1,length(time)); phaseD22 = NaN(1,length(time)); phaseD32 = NaN(1,length(time)); phaseD42 = NaN(1,length(time));
+phaseD12(1) = phase1(1);        phaseD22(1) = phase2(1);        phaseD32(1) = phase3(1);        phaseD42(1) = phase4(1); 
+
 indexT = 2;
 
 for indexMag = 1:1:length(time1)
@@ -80,8 +84,12 @@ for indexMag = 1:1:length(time1)
             magD12(indexT) = magD1(indexMag);
             magD22(indexT) = magD2(indexMag);
             
+            phaseD12(indexT) = phaseD1(indexMag);
+            phaseD22(indexT) = phaseD2(indexMag);
+            
             if indexMag < length(time4)
-                magD42(indexT) = magD4(indexMag);
+                magD42(indexT)   = magD4(indexMag);
+                phaseD42(indexT) = phaseD4(indexMag);
             end
         end
         
@@ -96,6 +104,7 @@ for indexMag = 1:1:length(time3)
         
         if indexT  <= length(time)
             magD32(indexT) = magD3(indexMag);
+            phaseD32(indexT) = phaseD3(indexMag);
         end
         
         indexT = indexT + 1;

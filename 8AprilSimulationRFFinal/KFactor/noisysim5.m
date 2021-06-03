@@ -55,7 +55,7 @@ rdot  = 3*10^8/(2*pi)*(phi_mod1 -phi_mod2)/(0.1);%lambda/(4*pi)*phi_mod*1/T;
 
 rdot2 = lambda1/(4*pi)*diff*1/T;
 
-if abs(rdot2) > 3
+if abs(rdot2) > .1
     rdot2 = 0;
 end
 

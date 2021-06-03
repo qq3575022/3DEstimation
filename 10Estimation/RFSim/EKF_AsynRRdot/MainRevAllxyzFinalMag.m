@@ -247,10 +247,10 @@ dmeasrdot1(2) = measrdot1(2);dmeasrdot2(2) = measrdot2(2);dmeasrdot3(2) = measrd
 
 %%
 figure
-subplot(411), plot(time1,  measr1, 'LineWidth', 1), hold on, plot(time, r_sim1, 'LineWidth', 1), title('Radial Distance $r1$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','simulation'), xlim([107.99, 111.984]);
-subplot(412), plot(time1,  measr2, 'LineWidth', 1), hold on, plot(time, r_sim2, 'LineWidth', 1),title('Radial Distance $r2$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','simulation'), xlim([107.99, 111.984]);
-subplot(413), plot(time3,  measr3, 'LineWidth', 1), hold on, plot(time, r_sim3, 'LineWidth', 1),title('Radial Distance $r3$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','simulation'), xlim([107.99, 111.984]);
-subplot(414), plot(time1,  measr4, 'LineWidth', 1), hold on, plot(time, r_sim4, 'LineWidth', 1),title('Radial Distance $r4$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','simulation'), xlim([107.99, 111.984]);
+subplot(411), plot(time,  dmeasr1, 'LineWidth', 2), hold on, plot(time, r_sim1, 'LineWidth', 2), hold on, plot(time, r_sim1_, 'k', 'LineWidth', 2),title('Radial Distance $r1$','interpreter','latex');  ylabel('Distance [m]','interpreter','latex'), legend('measurement','simulation','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
+subplot(412), plot(time,  dmeasr2, 'LineWidth', 2), hold on, plot(time, r_sim2, 'LineWidth', 2), hold on, plot(time, r_sim2_, 'k','LineWidth', 2),title('Radial Distance $r2$','interpreter','latex');  ylabel('Distance [m]','interpreter','latex'), legend('measurement','simulation','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
+subplot(413), plot(time,  dmeasr3, 'LineWidth', 2), hold on, plot(time, r_sim3, 'LineWidth', 2), hold on, plot(time, r_sim3_, 'k','LineWidth', 2),title('Radial Distance $r3$','interpreter','latex');  ylabel('Distance [m]','interpreter','latex'), legend('measurement','simulation','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
+subplot(414), plot(time,  dmeasr4, 'LineWidth', 2), hold on, plot(time, r_sim4, 'LineWidth', 2), hold on, plot(time, r_sim4_, 'k','LineWidth', 2),title('Radial Distance $r4$','interpreter','latex'); xlabel('time[s]'), ylabel('Distance [m]','interpreter','latex'), legend('measurement','simulation','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
 %%
 % 
 % 

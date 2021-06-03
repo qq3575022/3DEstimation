@@ -81,10 +81,10 @@ subplot(4,1,3),plot(time, r_sim3,'LineWidth',2);hold on; plot(time, r_sim3_,'Lin
 subplot(4,1,4),plot(time, r_sim4,'LineWidth',2);hold on; plot(time, r_sim4_,'LineWidth',2);title('Simulated Magnitude from Reader $\#4$ in 3D','interpreter','latex');ylabel('Magnitude [V]');xlabel('t [s]');grid on; grid minor;
 %%
 figure
-subplot(4,1,1),plot(time, -rdot_sim1,'LineWidth',3);hold on; plot(time, radial(1,:),'LineWidth',2);title('Simulated Radial Distance from Reader $\#1$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth')
-subplot(4,1,2),plot(time, -rdot_sim2,'LineWidth',3);hold on; plot(time, radial(2,:),'LineWidth',2);title('Simulated Radial Distance from Reader $\#2$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth','location','SouthEast')
-subplot(4,1,3),plot(time, -rdot_sim3,'LineWidth',3);hold on; plot(time, radial(3,:),'LineWidth',2);title('Simulated Radial Distance from Reader $\#3$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth','location','SouthEast')
-subplot(4,1,4),plot(time, -rdot_sim4,'LineWidth',3);hold on; plot(time, radial(4,:),'LineWidth',2);title('Simulated Radial Distance from Reader $\#4$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth')
+subplot(4,1,1),plot(time, rdot_sim1,'LineWidth',3);hold on; plot(time, radial(1,:),'LineWidth',2);title('Derived Radial Distance Based on Two Frequencies from Reader $\#1$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Time-of-Flight','Ground Truth')
+subplot(4,1,2),plot(time, rdot_sim2,'LineWidth',3);hold on; plot(time, radial(2,:),'LineWidth',2);title('Derived Radial Distance Based on Two Frequencies from Reader $\#2$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Time-of-Flight','Ground Truth','location','SouthEast')
+subplot(4,1,3),plot(time, rdot_sim3,'LineWidth',3);hold on; plot(time, radial(3,:),'LineWidth',2);title('Derived Radial Distance Based on Two Frequencies from Reader $\#3$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Time-of-Flight','Ground Truth','location','SouthEast')
+subplot(4,1,4),plot(time, rdot_sim4,'LineWidth',3);hold on; plot(time, radial(4,:),'LineWidth',2);title('Derived Radial Distance Based on Two Frequencies from Reader $\#4$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Time-of-Flight','Ground Truth')
 
 %%
 % Reader 1
@@ -198,7 +198,7 @@ end
 % subplot(413), plot(time, magD32);
 % subplot(414), plot(time, magD42);
 %
-%
+%%
 figure 
 subplot(411), plot(time, magD12, 'LineWidth', 2), title('Reader 1 Magnitude'),xlim([35, 155]);
 hold on

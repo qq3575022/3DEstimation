@@ -123,18 +123,18 @@ xlim([35, 155]);legend('Measurement','Simulation','location','NorthEast'), ylabe
 [-mean(H4_(2:124840) - H4(2:124840)),     rms(H4_(2:124840) - H4(2:124840)),     sqrt(rms(H4_(2:124840) - H4(2:124840)))]
 %%
 
-% Get K Value
-% m41 = getm3(sqrt(magD12));
-% m42 = getm3(sqrt(magD22));
-% m43 = getm3(sqrt(magD32));
-% m44 = getm3(sqrt(magD42));
-% %
-% figure
-% plot(time(1:end-10000), medfilt1(m41, 10000),'LineWidth', 2);title('K Value for Reader 1 in Simulation');ylabel('K Value'); grid on; grid minor;%ylim([0,1000]);xlim([5,140])
-% hold on, plot(time(1:end-10000), medfilt1(m42, 10000),'LineWidth', 2);%title('K Value for Reader 2 in Simulation');ylabel('K Value'); grid on; grid minor;%ylim([0,1000]);xlim([5,140])
-% hold on, plot(time(1:end-10000), medfilt1(m43, 10000),'LineWidth', 2);%title('K Value for Reader 3 in Simulation');ylabel('K Value'); grid on; grid minor;%ylim([0,1000]);xlim([5,140])
-% hold on, plot(time(1:end-10000), medfilt1(m44, 10000),'LineWidth', 2);legend('Reader 1','Reader 2', 'Reader 3', 'Reader 4');xlabel('time [s]');%title('K Value for Reader 4 in Simulation');ylabel('K Value'); grid on; grid minor;xlabel('time [s]');%ylim([0,1000]);xlim([5,140]);xlabel('time [s]');
-
+%Get K Value
+m41 = getm3(sqrt(magD12));
+m42 = getm3(sqrt(magD22));
+m43 = getm3(sqrt(magD32));
+m44 = getm3(sqrt(magD42));
+%%
+figure
+plot(time(1:end-10000), medfilt1(m41, 10000),'LineWidth', 3);title('K Value for Reader 1 2 3 4 in Measurement');ylabel('K Value'); grid on; grid minor;xlim([5,130]);ylim([2,16000]);%ylim([0,1000]);xlim([5,140])
+hold on, plot(time(1:end-10000), medfilt1(m42, 10000),'LineWidth', 3);%title('K Value for Reader 2 in Simulation');ylabel('K Value'); grid on; grid minor;%ylim([0,1000]);xlim([5,140])
+hold on, plot(time(1:end-10000), medfilt1(m43, 10000),'LineWidth', 3);%title('K Value for Reader 3 in Simulation');ylabel('K Value'); grid on; grid minor;%ylim([0,1000]);xlim([5,140])
+hold on, plot(time(1:end-10000), medfilt1(m44, 10000),'LineWidth', 3);legend('Reader 1','Reader 2', 'Reader 3', 'Reader 4');xlabel('time [s]');%title('K Value for Reader 4 in Simulation');ylabel('K Value'); grid on; grid minor;xlabel('time [s]');%ylim([0,1000]);xlim([5,140]);xlabel('time [s]');
+%set(gca, 'YScale', 'log')
 
 
 
