@@ -1,12 +1,12 @@
-function [v, v2, r, r2, rdot, rdot2, diff] = noisysim4(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,T,time1,multi)
-
-lambda  = 3*10^8/f;  lambda2 = 3*10^8/(f+0.1);
+function [v, v2, r, r2, rdot, rdot2, phi_mod_gt, phi_mod_gt2, phi_mod, phi_mod2, offset1, offset2, offset3, offset4] = noisysimFHopMulti(x,f,Gt,M,X,PT,GT,GR,R,sigma,index,k,z,z_prev,phi_prev_mod_gt_load, phi_prev_mod_load, T, offset1, offset2, offset3, offset4)
+                                                                                  
+lambda  = 3*10^8/f;  lambda2 = 3*10^8/(f+0.1*10^9);
 % ============================================= Magnitude =================================================
 direct       = sqrt((z(1,k)-x(1))^2      + (z(2,k)-x(2))^2      + (z(3,k)-x(3))^2);
 direct_prev  = sqrt((z_prev(1,k)-x(1))^2 + (z_prev(2,k)-x(2))^2 + (z_prev(3,k)-x(3))^2);
 
-mul          =  1/direct*exp(-i*2*pi*direct/lambda);  % frequency 1
-mul2         =  1/direct*exp(-i*2*pi*direct/lambda2); % frequency 2
+mul          =  1/direct*exp(-i*2*pi*direct/lambda);  % direct distance frequency 1
+mul2         =  1/direct*exp(-i*2*pi*direct/lambda2); % direct distance frequency 2
 
 mul_prev     =  1/direct_prev*exp(-i*2*pi*direct_prev/lambda);
 mul_prev2    =  1/direct_prev*exp(-i*2*pi*direct_prev/lambda2);
@@ -16,8 +16,8 @@ mul_prev2    =  1/direct_prev*exp(-i*2*pi*direct_prev/lambda2);
 d3           = sqrt((x(1) + 2)^2 + ((x(2) - z(2,k))/2)^2      + ((x(3) - z(3,k))/2)^2)      + sqrt((z(1,k) + 2)^2      + ((x(2) - z(2,k))/2)^2      + ((x(3) - z(3,k))/2)^2);%direct + lambda*50;
 d3_prev      = sqrt((x(1) + 2)^2 + ((x(2) - z_prev(2,k))/2)^2 + ((x(3) - z_prev(3,k))/2)^2) + sqrt((z_prev(1,k) + 2)^2 + ((x(2) - z_prev(2,k))/2)^2 + ((x(3) - z_prev(3,k))/2)^2);%direct + lambda*50;
 
-mulSum3      = 1/d3*exp(-i*2*pi*d3/lambda);  % frequency 1
-mulSum4      = 1/d3*exp(-i*2*pi*d3/lambda2); % frequency 2
+mulSum3      = 1/d3*exp(-i*2*pi*d3/lambda);  % multi-path frequency 1
+mulSum4      = 1/d3*exp(-i*2*pi*d3/lambda2); % multi-path frequency 2
 
 mulSum3_prev = 1/d3_prev*exp(-i*2*pi*d3_prev/lambda);
 mulSum3_prev2= 1/d3_prev*exp(-i*2*pi*d3_prev/lambda2);
@@ -34,7 +34,6 @@ H2 = H2./sqrt(H2);
 %v = random(pd).^2;
 v = H;%random(pd).^2;
 v2 = H2;
-unirand = rand;
 
 
 %r = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*(H^2)))^(1/4);
@@ -42,24 +41,48 @@ r2 = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*(H^2)))^(1/4);
 
 % % ============================================== Phase ====================================================
 
-phi_prev_mod = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev  + 0.2*mulSum3_prev)^4));
-%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_prev_mod2= angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev2 + 0.2*mulSum3_prev2)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-
-phi_mod      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul      + 0.2*mulSum3)^4));
-%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
-phi_mod2     = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul2    + 0.2*mulSum4)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda2;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
-
-phi_prev_mod_gt = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
+phi_prev_mod_gt  = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
+phi_mod_gt       = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
 %phi_prev_mod_gt = 4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2+(z_prev(3,k)-x(3))^2)/lambda;
-phi_mod_gt      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
 %phi_mod_gt      = 4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
 
-phi_prev_mod_gt2 = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev2)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
+phi_prev_mod2_gt = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul_prev2)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
 phi_mod_gt2      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul2)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
-%phi_mod_gt2      = 4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda2; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+%phi_mod_gt2     = 4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda2; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
 
-diff = phi_mod_gt - phi_prev_mod_gt;
+phi_prev_mod = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev  + 0.55*mulSum3_prev)^4));
+phi_mod      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul      + 0.55*mulSum3)^4));
+%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
+
+phi_prev_mod2= angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul_prev2 + 0.55*mulSum3_prev2)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
+phi_mod2     = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul2    + 0.55*mulSum4)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda2;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+
+if abs(phi_prev_mod_gt - phi_mod_gt) > 2
+    offset1 = offset1 + phi_prev_mod_gt - phi_mod_gt;
+end
+
+if abs(phi_prev_mod2_gt - phi_mod_gt2) > 2
+    offset2 = offset2 + phi_prev_mod2_gt - phi_mod_gt2;
+end
+
+if abs(phi_prev_mod - phi_mod) > 1
+    offset3 = offset3 + pi*sign(phi_prev_mod - phi_mod);
+end
+
+if abs(phi_prev_mod2 - phi_mod2) > 2
+    offset4 = offset4 + pi*sign(phi_prev_mod2 - phi_mod2);
+end
+
+phi_mod_gt  = phi_mod_gt + offset1;
+phi_mod_gt2 = phi_mod_gt2+ offset2;
+
+phi_mod  = phi_mod + offset3;
+phi_mod2 = phi_mod2+ offset4;
+
+
+
+diff = phi_mod - phi_prev_mod_load;
 
 delta_phi = diff;%phi_conc - phi_prev_conc;
 
@@ -70,24 +93,25 @@ phi_noise = 800000*new_sigma.*rand;
 
 delta_phi2 = exp(phi_noise)*delta_phi;
 
-presample = phi_prev_mod_gt - phi_mod_gt2;
-cursample = phi_mod_gt - phi_mod_gt2;
 
-
-(phi_mod_gt-phi_prev_mod_gt)%3*10^9/(4*pi)*
+%(phi_mod_gt-phi_prev_mod_gt)%3*10^9/(4*pi)*
 % rdot  = lambda/(4*pi)*diff*1/T;
 % rdot2 = lambda/(4*pi)*delta_phi2*1/T;
 
-r  = 3*10^8/(4*pi)*0.5*(phi_prev_mod_gt/f + phi_mod_gt2/(f+0.1))%lambda/(4*pi)*phi_mod*1/T;
-rdot = lambda/(4*pi)*diff*1/T;
+r_  = 3*10^8/(4*pi)*(phi_mod -phi_mod2)/(0.1*10^9);%lambda/(4*pi)*phi_mod*1/T;
+%r  = 3*10^8/(4*pi)*(phi_mod_gt - phi_mod_gt2)/0.1%lambda/(4*pi)*phi_mod*1/T;
+
+r = r_; %- lsqnonlin(@(xx)getMulPath(r_, xx, 0.55, f, phi_mod), 0.5);
+
+rdot = -lambda/(4*pi)*diff*1/T;
 
 rdot2 = rdot;
 
-if abs(r) > 5
+if abs(r) > 100
     r = 0;
 end
 
-if abs(rdot) > 0.3
+if abs(rdot) > 100
     rdot = 0;
 end
 
