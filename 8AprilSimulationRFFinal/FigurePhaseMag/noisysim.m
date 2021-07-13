@@ -142,8 +142,8 @@ delta_phi2 = exp(phi_noise)*delta_phi;
 % direct
 % phi_mod_gt- phi_mod2_gt
 
-rdot  = 3*10^8/(4*pi)*(phi_prev_mod_load -phi_mod2)/(Deltaf);%lambda/(4*pi)*phi_mod*1/T;
-rdot2 = 3*10^8/(4*pi)*(phi_mod -phi_mod2)/(Deltaf);%lambda/(4*pi)*diff*1/T;
+rdot  = 3*10^8/(2*pi)*(phi_prev_mod_load -phi_mod2)/(Deltaf);%lambda/(4*pi)*phi_mod*1/T;
+rdot2 = 3*10^8/(2*pi)*(phi_mod -phi_mod2)/(Deltaf);%lambda/(4*pi)*diff*1/T;
 
 if abs(rdot2) > 10
     rdot2 = 0;

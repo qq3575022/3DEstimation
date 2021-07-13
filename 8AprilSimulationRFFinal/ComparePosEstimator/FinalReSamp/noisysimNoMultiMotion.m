@@ -1,6 +1,8 @@
-function [v, v2, rmag, rgt, rmeas, rphase, rdot, rdotgt, phi_mod_gt, phi_mod_gt2, phi_mod, phi_mod2, phi_mod_gt3, phi_mod_gt4, offset1, offset2, offset3, offset4, offset5, offset6] = noisysimNoMultiMotion(x,f,Gt,M,X,PT,GT,GR,R,sigma,k,z,z_prev,phi_prev_mod_gt_load, phi_prev_mod_load, phi_prev_mod4_gt_load, T, Hmeas, offset1, offset2, offset3, offset4, offset5, offset6)
+function [v, v2, rmag, rgt, rmeas, rphase, rdot, rdotgt, phi_mod_gt, phi_mod_gt2, phi_mod, phi_mod2, phi_mod_gt3, phi_mod_gt4, offset1, offset2, offset3, offset4, offset5, offset6] = noisysimNoMultiMotion(x,f,Gt,X,PT,GT,R,sigma,rice, k,z,z_prev,phi_prev_mod_gt_load, phi_prev_mod_load, phi_prev_mod4_gt_load, T, Hmeas, offset1, offset2, offset3, offset4, offset5, offset6)
+
+
 % ============================================= Magnitude =================================================
-Delta_f = 0.1*10^7;    lambda = 3*10^8/f;     lambda2 = 3*10^8/(f+Delta_f); lambda3 = 3*10^8/(f-3*Delta_f); lambda4 = 3*10^8/(f-4*Delta_f);
+Delta_f = 10^6;    lambda = 3*10^8/f;     lambda2 = 3*10^8/(f+Delta_f); lambda3 = 3*10^8/(f-3*Delta_f); lambda4 = 3*10^8/(f-4*Delta_f);
 
 xcoord = z(1,k)-x(1);  ycoord = z(2,k)-x(2);   zcoord = z(3,k)-x(3);
 % ============================================= Multi-path =================================================
@@ -78,87 +80,81 @@ mulRef52_prev = 1/drefl5_prev*exp(-i*2*pi*drefl5_prev/lambda2);
 mulRef53_prev = 1/drefl5_prev*exp(-i*2*pi*drefl5_prev/lambda3);
 mulRef54_prev = 1/drefl5_prev*exp(-i*2*pi*drefl5_prev/lambda4);
 
-drefl6        = sqrt((2 - x(3))^2  + ((x(1) - z(1,k))/2)^2     + ((x(2) - z(2,k))/2)^2)       + sqrt((2 - z(3,k))^2 + ((x(1) - z(1,k))/2)^2+ ((x(2) - z(2,k))/2)^2);%direct + lambda*50;
+drefl6        = sqrt((2 - x(3))^2  + ((x(1) - z(1,k))/2)^2     + ((x(2) - z(2,k))/2)^2)       + sqrt((2 - z(3,k))^2 + ((x(1) - z(1,k))/2)^2+ ((x(2) - z(2,k))/2)^2);
 mulRef6       = 1/drefl6*exp(-i*2*pi*drefl6/lambda);
 mulRef62      = 1/drefl6*exp(-i*2*pi*drefl6/lambda2);
 mulRef63      = 1/drefl6*exp(-i*2*pi*drefl6/lambda3);
 mulRef64      = 1/drefl6*exp(-i*2*pi*drefl6/lambda4);
 
-drefl6_prev   = sqrt((2 - x(3))^2  + ((x(1) - z_prev(1,k))/2)^2 + ((x(2) - z_prev(2,k))/2)^2) + sqrt((2 - z_prev(3,k))^2 + ((x(1) - z_prev(1,k))/2)^2+ ((x(2) - z_prev(2,k))/2)^2);%direct + lambda*50;
+drefl6_prev   = sqrt((2 - x(3))^2  + ((x(1) - z_prev(1,k))/2)^2 + ((x(2) - z_prev(2,k))/2)^2) + sqrt((2 - z_prev(3,k))^2 + ((x(1) - z_prev(1,k))/2)^2+ ((x(2) - z_prev(2,k))/2)^2);
 mulRef6_prev  = 1/drefl6_prev*exp(-i*2*pi*drefl6_prev/lambda);
 mulRef62_prev = 1/drefl6_prev*exp(-i*2*pi*drefl6_prev/lambda2);
 mulRef63_prev = 1/drefl6_prev*exp(-i*2*pi*drefl6_prev/lambda3);
 mulRef64_prev = 1/drefl6_prev*exp(-i*2*pi*drefl6_prev/lambda4);
 
-H  = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/((4*pi)*(mul+ 0.1*mulRef1 + 0.1*mulRef2 + 0.1*mulRef3 + 0.1*mulRef4 + 0.1*mulRef5 +0.1*mulRef6))^4)); %  + 0.6*mulSum3 %mul+ 0.25* mulSum + 0.25*mulSum2
-H2 = abs(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/((4*pi)*(mul))^4));
+H  = abs(sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi)*(mul+ 0.1*mulRef1 + 0.1*mulRef2 + 0.1*mulRef3 + 0.1*mulRef4 + 0.1*mulRef5 +0.1*mulRef6)); 
+H2 = abs(sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi)*(mul));
+
 
 % ++++++++++++++++++++++++++++++++++++++++++ Noise of Magnitude +++++++++++++++++++++++++++++++++++++++++++
 
-H = H^2/abs(H);
-pd = makedist('Rician','s',sqrt(H),'sigma',0.10*sqrt(H));
+H = H2^2/abs(H2);
+pd = makedist('Rician','s',sqrt(H),'sigma',rice*sqrt(H));
 H = random(pd).^2;
 
 v = H;
 v2 = H2;
 
-rmag  = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*H^2))^(-1/4);
-rgt   = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*H2^2))^(-1/4);
-rmeas = ((2*PT*GT*GR*Gt^2*lambda^4*X^2*M*R)/((4*pi)^4*Hmeas^2))^(-1/4);
-
+rmag  = sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi*H); 
+rgt   = sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi*H2); 
+rmeas = sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi*Hmeas);
 % ============================================== Phase ====================================================
 
-phi_prev_mod_gt  = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_mod_gt       = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+phi_prev_mod_gt  = angle(sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi)*(mul_prev));
+phi_mod_gt       = angle(sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi)*(mul));
 
-phi_prev_mod2_gt = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul_prev2)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_mod_gt2      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul2)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+phi_prev_mod2_gt = angle(sqrt(2*R*PT*GT*Gt*lambda2^2*X)/(4*pi)*(mul_prev2));
+phi_mod_gt2      = angle(sqrt(2*R*PT*GT*Gt*lambda2^2*X)/(4*pi)*(mul2));
 
-phi_prev_mod3_gt = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda3^4*X^2*M)/(4*pi)^4*(mul_prev3)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_mod_gt3      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda3^4*X^2*M)/(4*pi)^4*(mul3)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+phi_prev_mod3_gt = angle(sqrt(2*R*PT*GT*Gt*lambda3^2*X)/(4*pi)*(mul_prev3));
+phi_mod_gt3      = angle(sqrt(2*R*PT*GT*Gt*lambda3^2*X)/(4*pi)*(mul3));
 
-phi_prev_mod4_gt = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda4^4*X^2*M)/(4*pi)^4*(mul_prev4)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_mod_gt4      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda4^4*X^2*M)/(4*pi)^4*(mul4)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda; %4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+phi_prev_mod4_gt = angle(sqrt(2*R*PT*GT*Gt*lambda4^2*X)/(4*pi)*(mul_prev4));
+phi_mod_gt4      = angle(sqrt(2*R*PT*GT*Gt*lambda4^2*X)/(4*pi)*(mul4));
 
-phi_prev_mod = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul_prev + 0.1*mulRef1_prev+ 0.1*mulRef2_prev+ 0.1*mulRef3_prev+ 0.1*mulRef4_prev+ 0.1*mulRef5_prev+ 0.1*mulRef6_prev)^4));
-phi_mod      = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda^4*X^2*M)/(4*pi)^4*(mul      + 0.1*mulRef1     + 0.1*mulRef2     + 0.1*mulRef3     + 0.1*mulRef4     + 0.1*mulRef5     + 0.1*mulRef6)^4));
+phi_prev_mod = angle(sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi)*(mul_prev + 0.1*mulRef1_prev+ 0.1*mulRef2_prev+ 0.1*mulRef3_prev+ 0.1*mulRef4_prev+ 0.1*mulRef5_prev+ 0.1*mulRef6_prev));
+phi_mod      = angle(sqrt(2*R*PT*GT*Gt*lambda^2*X)/(4*pi)*(mul      + 0.1*mulRef1     + 0.1*mulRef2     + 0.1*mulRef3     + 0.1*mulRef4     + 0.1*mulRef5     + 0.1*mulRef6));
 
-phi_prev_mod2= angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul_prev2+ 0.1*mulRef12_prev+ 0.1*mulRef22_prev+ 0.1*mulRef32_prev+ 0.1*mulRef42_prev+ 0.1*mulRef52_prev+ 0.1*mulRef62_prev)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_mod2     = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda2^4*X^2*M)/(4*pi)^4*(mul2     + 0.1*mulRef12     + 0.1*mulRef22     + 0.1*mulRef32     + 0.1*mulRef42     + 0.1*mulRef52     + 0.1*mulRef62)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda2;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+phi_prev_mod2 = angle(sqrt(2*R*PT*GT*Gt*lambda2^2*X)/(4*pi)*(mul_prev2 + 0.1*mulRef12_prev+ 0.1*mulRef22_prev+ 0.1*mulRef32_prev+ 0.1*mulRef42_prev+ 0.1*mulRef52_prev+ 0.1*mulRef62_prev));
+phi_mod2      = angle(sqrt(2*R*PT*GT*Gt*lambda2^2*X)/(4*pi)*(mul2      + 0.1*mulRef12     + 0.1*mulRef22     + 0.1*mulRef32     + 0.1*mulRef42     + 0.1*mulRef52    + 0.1*mulRef62));
 
-phi_prev_mod3= angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda3^4*X^2*M)/(4*pi)^4*(mul_prev3+ 0.1*mulRef13_prev+ 0.1*mulRef23_prev+ 0.1*mulRef33_prev+ 0.1*mulRef43_prev+ 0.1*mulRef53_prev+ 0.1*mulRef63_prev)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_mod3     = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda3^4*X^2*M)/(4*pi)^4*(mul3     + 0.1*mulRef13     + 0.1*mulRef23     + 0.1*mulRef33     + 0.1*mulRef43     + 0.1*mulRef53     + 0.1*mulRef63)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda2;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+phi_prev_mod3 = angle(sqrt(2*R*PT*GT*Gt*lambda3^2*X)/(4*pi)*(mul_prev3 + 0.1*mulRef13_prev+ 0.1*mulRef23_prev+ 0.1*mulRef33_prev+ 0.1*mulRef43_prev+ 0.1*mulRef53_prev+ 0.1*mulRef63_prev));
+phi_mod3      = angle(sqrt(2*R*PT*GT*Gt*lambda3^2*X)/(4*pi)*(mul3      + 0.1*mulRef13     + 0.1*mulRef23     + 0.1*mulRef33     + 0.1*mulRef43     + 0.1*mulRef53    + 0.1*mulRef63));
 
-phi_prev_mod4= angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda4^4*X^2*M)/(4*pi)^4*(mul_prev4+ 0.1*mulRef14_prev+ 0.1*mulRef24_prev+ 0.1*mulRef34_prev+ 0.1*mulRef44_prev+ 0.1*mulRef54_prev+ 0.1*mulRef64_prev)^4));%mod(4*pi*sqrt((z_prev(1,k)-x(1))^2+(z_prev(2,k)-x(2))^2)/lambda,2*pi);
-phi_mod4     = angle(sqrt((2*R*PT*GT*GR*Gt^2*lambda4^4*X^2*M)/(4*pi)^4*(mul4     + 0.1*mulRef14     + 0.1*mulRef24     + 0.1*mulRef34     + 0.1*mulRef44     + 0.1*mulRef54     + 0.1*mulRef64)^4));%4*pi*sqrt((z(1,k)-x(1))^2+(z(2,k)-x(2))^2+(z(3,k)-x(3))^2)/lambda2;%mod(4*pi*sqrt((z(1,k)     -x(1))^2+(z(2,k)     -x(2))^2)/lambda,2*pi);
+phi_prev_mod4 = angle(sqrt(2*R*PT*GT*Gt*lambda4^2*X)/(4*pi)*(mul_prev4 + 0.1*mulRef14_prev+ 0.1*mulRef24_prev+ 0.1*mulRef34_prev+ 0.1*mulRef44_prev+ 0.1*mulRef54_prev+ 0.1*mulRef64_prev));
+phi_mod4      = angle(sqrt(2*R*PT*GT*Gt*lambda4^2*X)/(4*pi)*(mul4      + 0.1*mulRef14     + 0.1*mulRef24     + 0.1*mulRef34     + 0.1*mulRef44     + 0.1*mulRef54    + 0.1*mulRef64));
 
 if abs(phi_prev_mod_gt - phi_mod_gt) > 1
-    %offset1 = offset1 + pi*sign(phi_prev_mod_gt - phi_mod_gt);
     offset1 = offset1 + phi_prev_mod_gt - phi_mod_gt;
 end
 
 if abs(phi_prev_mod2_gt - phi_mod_gt2) > 1
-    %offset2 = offset2 + pi*sign(phi_prev_mod2_gt - phi_mod_gt2);
     offset2 = offset2 + phi_prev_mod2_gt - phi_mod_gt2;
 end
 
 if abs(phi_prev_mod - phi_mod) > 1
-    %offset3 = offset3 + pi*sign(phi_prev_mod - phi_mod);
     offset3 = offset3 + phi_prev_mod - phi_mod;
 end
 
 if abs(phi_prev_mod2 - phi_mod2) > 1
-    %offset4 = offset4 + pi*sign(phi_prev_mod2 - phi_mod2);
     offset4 = offset4 + phi_prev_mod2 - phi_mod2;
 end
 
 if abs(phi_prev_mod3_gt - phi_mod_gt3) > 1
-    %offset5 = offset5 + pi*sign(phi_prev_mod3_gt - phi_mod_gt3);
     offset5 = offset5 + phi_prev_mod3_gt - phi_mod_gt3;
 end
 
 if abs(phi_prev_mod4_gt - phi_mod_gt4) > 1
-    %offset6 = offset6 + pi*sign(phi_prev_mod4_gt - phi_mod_gt4);
     offset6 = offset6 + phi_prev_mod4_gt - phi_mod_gt4;
 end
 
@@ -196,8 +192,8 @@ phi_noise4 = 0.04*new_sigma4.*rand;
 phi_mod_gt  = exp(phi_noise)*phi_mod_gt;
 phi_mod_gt2 = exp(phi_noise2)*phi_mod_gt2;
 
-% phi_mod_gt3  = exp(phi_noise3)*phi_mod_gt3;
-% phi_mod_gt4  = exp(phi_noise4)*phi_mod_gt4;
+phi_mod_gt3  = exp(phi_noise3)*phi_mod_gt3;
+phi_mod_gt4  = exp(phi_noise4)*phi_mod_gt4;
 
 % rdot2 = lambda/(4*pi)*delta_phi2*1/T;
 if isnan(phi_prev_mod_gt_load)
@@ -208,22 +204,25 @@ if isnan(phi_prev_mod4_gt_load)
     phi_prev_mod4_gt_load = phi_mod_gt3;
 end
 
-xx = 1:1:4;
+%xx = 1:1:4;
 %ans = polyfit(xx, [phi_prev_mod_gt_load, phi_mod_gt2, phi_prev_mod4_gt_load, phi_prev_mod4_gt_load], 1);
 %rphase  = 3*10^8/(4*pi)*(ans(1))/Delta_f;%lambda/(4*pi)*phi_mod*1/T; %+ (phi_mod2 - phi_mod4)
 
 
-rphase_prev = 3*10^8/(4*pi)*(phi_prev_mod_gt - phi_prev_mod2_gt)/Delta_f;
-rphase  = 3*10^8/(4*pi)*1/2*(1*(phi_prev_mod_gt_load - phi_mod_gt2)+1*(phi_prev_mod4_gt_load - phi_mod_gt3))/Delta_f;%lambda/(4*pi)*phi_mod*1/T; %+ (phi_mod2 - phi_mod4)
+rphase_prev = 3*10^8/(2*pi)*(phi_prev_mod_gt - phi_prev_mod2_gt)/Delta_f;
+rphase  = 3*10^8/(2*pi)*1/2*(1*(phi_prev_mod_gt_load - phi_mod_gt2)+1*(phi_prev_mod4_gt_load - phi_mod_gt3))/Delta_f;%lambda/(4*pi)*phi_mod*1/T; %+ (phi_mod2 - phi_mod4)
 
 
-rdot   = lambda/(4*pi)*(phi_mod_gt - phi_prev_mod_gt_load)*1/T;
-rdotgt = lambda/(4*pi)*diff*1/T;
+rdot   = -lambda/(2*pi)*(phi_mod_gt - phi_prev_mod_gt_load)*1/T;
+rdotgt = -lambda/(2*pi)*diff*1/T;
 
-if abs(rdotgt) > 2
+if abs(rdot) > 1
+    rdot = 0;
+end
+if abs(rdotgt) > 1
     rdotgt = 0;
 end
-if abs(rphase) > 4
+if abs(rphase) > 3
     rphase = 0;
 end
 

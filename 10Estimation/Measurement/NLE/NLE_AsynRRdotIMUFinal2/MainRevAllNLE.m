@@ -7,7 +7,7 @@ x4 = [0,    2.52, 1.27];
 
 load('RF.mat'); 
 load('IMU.mat')
-% -------------- Time and Coordinates ----------
+%% -------------- Time and Coordinates ----------
 % time:     IMU Measurement
 % coord3:   Ground Truth of 3D Coordinates
 % z,z_prev: 3D coordinates for Simulation
@@ -18,10 +18,10 @@ time = unique(sort([rtime; itime]),'rows');
 
 [coord3, radial] = get3Dcoord(x1, x2, x3, x4, time);
 %%
-N = 3; i = 1; j = 1; k = 1; l = 1;
+N = 1; i = 1; j = 1; k = 1; l = 1;
 % Initiate x, e and temproary variable
 x = [0.5;0.5;0.5; 0.5;0.5;0.5; 1.1;0.5;0.5; 0.5;0.5;0.5; 0.5;0.5;0.5]*ones(1,length(time)-N);e = NaN(1,length(time)-N);
-factor = 1;
+factor = 3;
 
 for m = 1:1:length(time)-N
     
@@ -54,6 +54,6 @@ subplot(9,1,9), plot(time(1:end-N), x(9,:), 'b', 'LineWidth', 2); hold on; plot(
 
 
 %%
-rmsErrorX = rms(x(1,:)-coord3(1,1:end-N))
-rmsErrorY = rms(x(4,:)-coord3(2,1:end-N))
-rmsErrorZ = rms(x(7,:)-coord3(3,1:end-N))
+rmsErrorX = 1000*rms(x(1,:)-coord3(1,1:end-N))
+rmsErrorY = 1000*rms(x(4,:)-coord3(2,1:end-N))
+rmsErrorZ = 1000*rms(x(7,:)-coord3(3,1:end-N))

@@ -15,7 +15,7 @@ load('RF.mat');
 
 [coord3, radial] = get3Dcoord(x1, x2, x3, x4, rtime);
 %%
-N = 3; i = 1; j = 1; k = 1; l = 1;
+N = 10; i = 1; j = 1; k = 1; l = 1;
 % Initiate x, e and temproary variable
 x = [0.5;0.5;0.5; 0.5;0.5;0.5; 1.1;0.5;0.5; 0.5;0.5;0.5; 0.5;0.5;0.5]*ones(1,length(rtime)-N);e = NaN(1,length(rtime)-N);
 factor = 1;
@@ -32,10 +32,10 @@ for m = 1:1:length(rtime)-N
 end
 
 
-%
-[pos1, vel1] = doubleInte(diff(time(1:end-N)), x(3,2:end));
-[pos2, vel2] = doubleInte(diff(time(1:end-N)), x(6,2:end));
-[pos3, vel3] = doubleInte(diff(time(1:end-N)), x(9,2:end));
+% %
+% [pos1, vel1] = doubleInte(diff(time(1:end-N)), x(3,2:end));
+% [pos2, vel2] = doubleInte(diff(time(1:end-N)), x(6,2:end));
+% [pos3, vel3] = doubleInte(diff(time(1:end-N)), x(9,2:end));
 
 %%
 figure
@@ -51,6 +51,6 @@ subplot(9,1,9), plot(rtime(1:end-N), x(9,:), 'b', 'LineWidth', 2); hold on; plot
 
 
 %%
-rmsErrorX = rms(x(1,:)-coord3(1,1:end-N))
-rmsErrorY = rms(x(4,:)-coord3(2,1:end-N))
-rmsErrorZ = rms(x(7,:)-coord3(3,1:end-N))
+rmsErrorX = 1000*rms(x(1,:)-coord3(1,1:end-N))
+rmsErrorY = 1000*rms(x(4,:)-coord3(2,1:end-N))
+rmsErrorZ = 1000*rms(x(7,:)-coord3(3,1:end-N))

@@ -4,7 +4,8 @@ x2 = [2.29, 0,    1.27];
 x3 = [2.29, 2.52, 0.865]; 
 x4 = [0,    2.52, 1.27];
 
-load('SimRFMag2.mat'); 
+%load('SimRFMag2.mat'); 
+load('SimRFPhase4.mat'); 
 load('SimIMU.mat')
 
 acc(1,:) = acc(1,:) - mean(acc(1,:)); acc(2,:) = acc(2,:) - mean(acc(2,:)); acc(3,:) = acc(3,:) - mean(acc(3,:));
@@ -102,6 +103,6 @@ subplot(9,1,9), plot(time(1:end-N), x(9,:), 'b', 'LineWidth', 2); hold on; plot(
 
 
 %%
-rmsErrorX = rms(x(1,:)-coord3(1,1:end-N))
-rmsErrorY = rms(x(4,:)-coord3(2,1:end-N))
-rmsErrorZ = rms(x(7,:)-coord3(3,1:end-N))
+rmsErrorX = 1000*rms(x(1,:)-coord3(1,1:end-N))
+rmsErrorY = 1000*rms(x(4,:)-coord3(2,1:end-N))
+rmsErrorZ = 1000*rms(x(7,:)-coord3(3,1:end-N))

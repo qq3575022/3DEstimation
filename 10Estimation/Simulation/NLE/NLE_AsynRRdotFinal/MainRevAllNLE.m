@@ -5,7 +5,7 @@ x2 = [2.29, 0,    1.27];
 x3 = [2.29, 2.52, 0.865]; 
 x4 = [0,    2.52, 1.27];
 
-load('SimRFMag2.mat'); 
+load('SimRFPhase4.mat'); 
 %load('IMU.mat')
 % -------------- Time and Coordinates ----------
 % time:     IMU Measurement
@@ -15,7 +15,7 @@ load('SimRFMag2.mat');
 
 [coord3, radial] = get3Dcoord(x1, x2, x3, x4, rtime);
 %%
-N = 3; i = 1; j = 1; k = 1; l = 1;
+N = 10; i = 1; j = 1; k = 1; l = 1;
 % Initiate x, e and temproary variable
 x = [0.5;0.5;0.5; 0.5;0.5;0.5; 1.1;0.5;0.5; 0.5;0.5;0.5; 0.5;0.5;0.5]*ones(1,length(rtime)-N);e = NaN(1,length(rtime)-N);
 factor = 1;
@@ -51,6 +51,6 @@ subplot(9,1,9), plot(rtime(1:end-N), x(9,:), 'b', 'LineWidth', 2); hold on; plot
 
 
 %%
-rmsErrorX = rms(x(1,:)-coord3(1,1:end-N))
-rmsErrorY = rms(x(4,:)-coord3(2,1:end-N))
-rmsErrorZ = rms(x(7,:)-coord3(3,1:end-N))
+rmsErrorX = 1000*rms(x(1,:)-coord3(1,1:end-N))
+rmsErrorY = 1000*rms(x(4,:)-coord3(2,1:end-N))
+rmsErrorZ = 1000*rms(x(7,:)-coord3(3,1:end-N))
