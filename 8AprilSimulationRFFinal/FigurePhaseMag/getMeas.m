@@ -4,7 +4,8 @@ function [magD1, magD2, mag3, magD4, phaseD1, phaseD2, phase33, phaseD4, t1] = g
 D01 = read_complex_binary ('/Users/Joanna/Documents/PhD/Git/Dissertation-Git/3DEstimation/6Data/0422Reader/0422_reader1_6.bin', 1000000000, 1);
 D1 = D01;%(85000:445000,1);
 
-magD1 = abs(D1)+0.0001246;%+0.0002284;
+%magD1 = abs(D1)+0.0001246;%Prev %+0.0002284;
+magD1 = abs(D1)+0.0001484;
 phaseD1 = angle(D1);
 
 time1 = 0:length(magD1)/(length(magD1)*6000):length(magD1)/6000 - length(magD1)/(length(magD1)*6000);
@@ -15,7 +16,9 @@ time1 = time1*1.238;
 D02 = read_complex_binary ('/Users/Joanna/Documents/PhD/Git/Dissertation-Git/3DEstimation/6Data/0422Reader/0422_reader2_6.bin', 1000000000, 1);
 D2 = D02;%(152000:512000,1);
 
-magD2 = abs(D2)+0.000242+0.000346;%%+0.0006892;
+magD2 = abs(D2)+0.000242+0.000346;%Prev %+0.0006892;
+%magD2 = abs(D2)+0.0007092;
+
 phaseD2 = angle(D2);
 
 time2 = 0:length(magD2)/(length(magD2)*6000):length(magD2)/6000 - length(magD2)/(length(magD2)*6000);
@@ -26,7 +29,8 @@ time2 = time2*1.238;
 D03 = read_complex_binary ('/Users/Joanna/Documents/PhD/Git/Dissertation-Git/3DEstimation/6Data/0422Reader/0422_reader3_6.bin', 1000000000, 1);
 D3 = D03(31558:end,1);
 
-magD3 = abs(D3)+0.000044;
+magD3 = abs(D3)+0.000044;% Prev
+%magD3 = abs(D3)+0.00030778;
 phaseD3 = angle(D3);
 
 
@@ -37,7 +41,9 @@ time3 = time3*1.217;
 D04 = read_complex_binary ('/Users/Joanna/Documents/PhD/Git/Dissertation-Git/3DEstimation/6Data/0422Reader/0422_reader4_6.bin', 1000000000, 1);
 D4 = D04;%(150000:510000,1);
 
-magD4 = NaN(length(magD2), 1);   magD4(1:length(D04)) = abs(D4)+0.00015078;   
+magD4 = NaN(length(magD2), 1);  
+magD4(1:length(D04)) = abs(D4)+0.00015078;   
+
 magD4(length(D04) + 1: end) = magD4(1:length(magD2) - length(D04));
 %magD4 = abs(D4)+0.00010078;
 phaseD4 = NaN(length(magD2), 1); phaseD4(1:length(D04)) = angle(D4); phaseD4(length(D04) + 1: end) = phaseD4(1:length(magD2) - length(D04));

@@ -76,10 +76,12 @@ rtime = time(yST:yET);
 r1 = rphase1(yST:yET); r2 = rphase2(yST:yET); r3 = rphase3(yST:yET); r4 = rphase4(yST:yET);
 rdot1 = rdot_sim1(yST:yET); rdot2 = rdot_sim2(yST:yET); rdot3 = rdot_sim3(yST:yET); rdot4 = rdot_sim4(yST:yET);
 
-save('SimRFPhase1.mat', 'r1', 'r2', 'r3', 'r4', 'rdot1', 'rdot2', 'rdot3', 'rdot4','rtime');
+%save('SimRFPhase1.mat', 'r1', 'r2', 'r3', 'r4', 'rdot1', 'rdot2', 'rdot3', 'rdot4','rtime');
 r1 = r_sim1(yST:yET); r2 = r_sim2(yST:yET); r3 = r_sim3(yST:yET); r4 = r_sim4(yST:yET);
 
-save('SimRFMag1.mat', 'r1', 'r2', 'r3', 'r4', 'rdot1', 'rdot2', 'rdot3', 'rdot4','rtime');
+%save('SimRFMag1.mat', 'r1', 'r2', 'r3', 'r4', 'rdot1', 'rdot2', 'rdot3', 'rdot4','rtime');
+
+
 %% ==================================================================== Results ======================================================================
 % -------------- Radial Distances RMS: Reader1 Reader2 Reader3 Reader4 ----------
 fprintf('================================== radial distance RMS ================================== ')

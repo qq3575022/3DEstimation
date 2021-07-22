@@ -56,7 +56,13 @@ for k = 1:1:length(time)-1
 [H4(k+1),H4_(k+1),r_sim4(k+1),r_sim4_(k+1), rdot_sim4(k+1), rdot_sim4_(k+1), phase4(k+1), phigt1_4(k+1), phigt2_4(k+1), phi1_4(k+1), phi2_4(k+1), offset14, offset24, offset34, offset44] = noisysim(x4,f4,Gt,X,PT, GT4, R,sigma,0.005,k,z,z_prev,phigt1_4(k),phi1_4(k), time(k+1)-time(k), offset14, offset24, offset34, offset44);  
 end
 %%
+figure
+subplot(4,1,1),plot(time, H1,'LineWidth',3);hold on; plot(time, H1_,'LineWidth',2);title('Derived Radial Distance from Magnitude of Reader $\#1$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth'),xlim([35, 155]);
+subplot(4,1,2),plot(time, H2,'LineWidth',3);hold on; plot(time, H2_,'LineWidth',2);title('Derived Radial Distance from Magnitude of Reader $\#2$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth'),xlim([35, 155]);
+subplot(4,1,3),plot(time, H3,'LineWidth',3);hold on; plot(time, H3_,'LineWidth',2);title('Derived Radial Distance from Magnitude of Reader $\#3$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth');ylim([1,2.5]),xlim([35, 155]);
+subplot(4,1,4),plot(time, H4,'LineWidth',3);hold on; plot(time, H4_,'LineWidth',2);title('Derived Radial Distance from Magnitude of Reader $\#4$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth'),xlim([35, 155]);
 
+%%
 figure
 subplot(4,1,1),plot(time, r_sim1,'LineWidth',3);hold on; plot(time, r_sim1_,'LineWidth',2);title('Derived Radial Distance from Magnitude of Reader $\#1$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth'),xlim([35, 155]);
 subplot(4,1,2),plot(time, r_sim2,'LineWidth',3);hold on; plot(time, r_sim2_,'LineWidth',2);title('Derived Radial Distance from Magnitude of Reader $\#2$ in 3D','interpreter','latex');ylabel('Radial Distance [m]');xlabel('t [s]');grid on; grid minor;legend('Simulation','Ground Truth'),xlim([35, 155]);

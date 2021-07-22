@@ -58,6 +58,9 @@ subplot(9,1,9), plot(time(1:end-N), x(9,:), 'b', 'LineWidth', 2); hold on; plot(
 
 
 %%
-rmsErrorX = 1000*rms(x(1,:)-coord3(1,1:end-N))
-rmsErrorY = 1000*rms(x(4,:)-coord3(2,1:end-N))
-rmsErrorZ = 1000*rms(x(7,:)-coord3(3,1:end-N))
+rmsErrorX = 1000*rms(x(1,:)-coord3(1,1:end-N));
+rmsErrorY = 1000*rms(x(4,:)-coord3(2,1:end-N));
+rmsErrorZ = 1000*rms(x(7,:)-coord3(3,1:end-N));
+rms3D = sqrt(rmsErrorX^2 + rmsErrorY^2 + rmsErrorZ^2)
+rms2D = sqrt(rmsErrorX^2 + rmsErrorY^2)
+rmsErrorZ

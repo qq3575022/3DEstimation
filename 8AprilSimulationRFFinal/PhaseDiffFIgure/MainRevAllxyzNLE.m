@@ -24,7 +24,7 @@ yET  = find(abs(time-111.984)<0.002);  yET = yET(1)+1;
 
 %%
 % Parameters of reader
-Gt = 0.6*1.462*3/4;    % tag's antenna gain
+Gt = 1/75*sqrt(1.462*3/4);     % tag's antenna gain
 X  = 0.85;             % polarization mismatch
 M  = sqrt(4);          % load modulation factor of the tag
 f1 = 5.8*10^9;
@@ -34,12 +34,15 @@ f4 = 5.85*10^9;
 
 % Parameters of reader
 PT = 1;         % reader's transmitted power
-GT = sqrt(1.462);     % reader's trasmitter antenna gain 9.5dBi
-GR = sqrt(1.462);     % reader's receiver   antenna gain 9.5dBi
+GT1 = 0.7*0.0331*sqrt(1.462*3/4);   % reader's trasmitter antenna gain -16.15dBi
+GT2 =  7*0.0331*sqrt(1.462*3/4);    % reader's trasmitter antenna gain -6.15dBi
+GT3 =    0.0331*sqrt(1.462*3/4);    % reader's trasmitter antenna gain -14.60dBi
+GT4 = 0.5*0.0331*sqrt(1.462*3/4);   % reader's trasmitter antenna gain -17.61dBi
 R = 15;
 
 % Channel noise error covariance
-sigma = 0.0012; 
+sigma = 0.02; 
+rng(2,'twister');
 
 offset11 = 0; offset21 = 0; offset31 = 0; offset41 = 0;offset12 = 0; offset22 = 0; offset32 = 0; offset42 = 0;
 offset13 = 0; offset23 = 0; offset33 = 0; offset43 = 0;offset14 = 0; offset24 = 0; offset34 = 0; offset44 = 0;
@@ -47,11 +50,17 @@ offset51 = 0; offset52 = 0; offset53 = 0; offset54 = 0;offset61 = 0; offset62 = 
 
 
 for k = yST-1:1:yET  
+% 
+% [H1(k+1),H1_(k+1),r_sim1(k+1),r_sim1_(k+1),r_meas1(k+1),rphase1(k+1),rdot_sim1(k+1),rdot_sim1_(k+1),phigt1_1(k+1),phigt2_1(k+1),phi1_1(k+1),phi2_1(k+1),offset11,offset21,offset31,offset41,offset51,offset61] = noisysimNoMultiStatic(x1,f1,Gt,M,X,PT,0.7*GT,GR,R,sigma,k,z,z_prev,phigt1_1(k),phi1_1(k),time(k)-time(k-1),magD12(k),offset11,offset21,offset31,offset41,offset51,offset61);
+% [H2(k+1),H2_(k+1),r_sim2(k+1),r_sim2_(k+1),r_meas2(k+1),rphase2(k+1),rdot_sim2(k+1),rdot_sim2_(k+1),phigt1_2(k+1),phigt2_2(k+1),phi1_2(k+1),phi2_2(k+1),offset12,offset22,offset32,offset42,offset52,offset62] = noisysimNoMultiStatic(x2,f2,Gt,M,X,PT,  7*GT,GR,R,sigma,k,z,z_prev,phigt1_2(k),phi1_2(k),time(k)-time(k-1),magD22(k),offset12,offset22,offset32,offset42,offset52,offset62);
+% [H3(k+1),H3_(k+1),r_sim3(k+1),r_sim3_(k+1),r_meas3(k+1),rphase3(k+1),rdot_sim3(k+1),rdot_sim3_(k+1),phigt1_3(k+1),phigt2_3(k+1),phi1_3(k+1),phi2_3(k+1),offset13,offset23,offset33,offset43,offset53,offset63] = noisysimNoMultiStatic(x3,f3,Gt,M,X,PT,    GT,GR,R,sigma,k,z,z_prev,phigt1_3(k),phi1_3(k),time(k)-time(k-1),magD32(k),offset13,offset23,offset33,offset43,offset53,offset63);   
+% [H4(k+1),H4_(k+1),r_sim4(k+1),r_sim4_(k+1),r_meas4(k+1),rphase4(k+1),rdot_sim4(k+1),rdot_sim4_(k+1),phigt1_4(k+1),phigt2_4(k+1),phi1_4(k+1),phi2_4(k+1),offset14,offset24,offset34,offset44,offset54,offset64] = noisysimNoMultiStatic(x4,f4,Gt,M,X,PT,0.5*GT,GR,R,sigma,k,z,z_prev,phigt1_4(k),phi1_4(k),time(k)-time(k-1),magD42(k),offset14,offset24,offset34,offset44,offset54,offset64);  
 
-[H1(k+1),H1_(k+1),r_sim1(k+1),r_sim1_(k+1),r_meas1(k+1),rphase1(k+1),rdot_sim1(k+1),rdot_sim1_(k+1),phigt1_1(k+1),phigt2_1(k+1),phi1_1(k+1),phi2_1(k+1),offset11,offset21,offset31,offset41,offset51,offset61] = noisysimNoMultiStatic(x1,f1,Gt,M,X,PT,0.7*GT,GR,R,sigma,k,z,z_prev,phigt1_1(k),phi1_1(k),time(k)-time(k-1),magD12(k),offset11,offset21,offset31,offset41,offset51,offset61);
-[H2(k+1),H2_(k+1),r_sim2(k+1),r_sim2_(k+1),r_meas2(k+1),rphase2(k+1),rdot_sim2(k+1),rdot_sim2_(k+1),phigt1_2(k+1),phigt2_2(k+1),phi1_2(k+1),phi2_2(k+1),offset12,offset22,offset32,offset42,offset52,offset62] = noisysimNoMultiStatic(x2,f2,Gt,M,X,PT,  7*GT,GR,R,sigma,k,z,z_prev,phigt1_2(k),phi1_2(k),time(k)-time(k-1),magD22(k),offset12,offset22,offset32,offset42,offset52,offset62);
-[H3(k+1),H3_(k+1),r_sim3(k+1),r_sim3_(k+1),r_meas3(k+1),rphase3(k+1),rdot_sim3(k+1),rdot_sim3_(k+1),phigt1_3(k+1),phigt2_3(k+1),phi1_3(k+1),phi2_3(k+1),offset13,offset23,offset33,offset43,offset53,offset63] = noisysimNoMultiStatic(x3,f3,Gt,M,X,PT,    GT,GR,R,sigma,k,z,z_prev,phigt1_3(k),phi1_3(k),time(k)-time(k-1),magD32(k),offset13,offset23,offset33,offset43,offset53,offset63);   
-[H4(k+1),H4_(k+1),r_sim4(k+1),r_sim4_(k+1),r_meas4(k+1),rphase4(k+1),rdot_sim4(k+1),rdot_sim4_(k+1),phigt1_4(k+1),phigt2_4(k+1),phi1_4(k+1),phi2_4(k+1),offset14,offset24,offset34,offset44,offset54,offset64] = noisysimNoMultiStatic(x4,f4,Gt,M,X,PT,0.5*GT,GR,R,sigma,k,z,z_prev,phigt1_4(k),phi1_4(k),time(k)-time(k-1),magD42(k),offset14,offset24,offset34,offset44,offset54,offset64);  
+[H1(k+1),H1_(k+1),r_sim1(k+1),r_sim1_(k+1),r_meas1(k+1),rphase1(k+1),rdot_sim1(k+1),rdot_sim1_(k+1),phigt1_1(k+1),phigt2_1(k+1),phi1_1(k+1),phi2_1(k+1),offset11,offset21,offset31,offset41,offset51,offset61] = noisysimNoMultiStatic(x1,f1,Gt,X,PT,GT1,R,sigma,0.025,k,z,z_prev,phigt1_1(k),phi1_1(k),time(k)-time(k-1),magD12(k),offset11,offset21,offset31,offset41,offset51,offset61);
+[H2(k+1),H2_(k+1),r_sim2(k+1),r_sim2_(k+1),r_meas2(k+1),rphase2(k+1),rdot_sim2(k+1),rdot_sim2_(k+1),phigt1_2(k+1),phigt2_2(k+1),phi1_2(k+1),phi2_2(k+1),offset12,offset22,offset32,offset42,offset52,offset62] = noisysimNoMultiStatic(x2,f2,Gt,X,PT,GT2,R,sigma,0.0025,k,z,z_prev,phigt1_2(k),phi1_2(k),time(k)-time(k-1),magD22(k),offset12,offset22,offset32,offset42,offset52,offset62);
+[H3(k+1),H3_(k+1),r_sim3(k+1),r_sim3_(k+1),r_meas3(k+1),rphase3(k+1),rdot_sim3(k+1),rdot_sim3_(k+1),phigt1_3(k+1),phigt2_3(k+1),phi1_3(k+1),phi2_3(k+1),offset13,offset23,offset33,offset43,offset53,offset63] = noisysimNoMultiStatic(x3,f3,Gt,X,PT,GT3,R,sigma,0.088,k,z,z_prev,phigt1_3(k),phi1_3(k),time(k)-time(k-1),magD32(k),offset13,offset23,offset33,offset43,offset53,offset63);   
+[H4(k+1),H4_(k+1),r_sim4(k+1),r_sim4_(k+1),r_meas4(k+1),rphase4(k+1),rdot_sim4(k+1),rdot_sim4_(k+1),phigt1_4(k+1),phigt2_4(k+1),phi1_4(k+1),phi2_4(k+1),offset14,offset24,offset34,offset44,offset54,offset64] = noisysimNoMultiStatic(x4,f4,Gt,X,PT,GT4,R,sigma,0.018,k,z,z_prev,phigt1_4(k),phi1_4(k),time(k)-time(k-1),magD42(k),offset14,offset24,offset34,offset44,offset54,offset64);  
+
 
 end
 %%
@@ -122,8 +131,8 @@ subplot(414), plot(time,  r_meas4, 'LineWidth', 1), hold on, plot(time, r_sim4, 
 
 %%
 figure
-subplot(411), plot(time(yST:yET), phaseD1(yST+1300:yET+1300), 'LineWidth', 2); hold on; plot(time(yST:yET), rdot_sim1(yST:yET), 'LineWidth', 2), title('Radial Velocity $\dot r_1$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
-subplot(412), plot(time(yST:yET), phaseD2(yST+1300:yET+1300), 'LineWidth', 2); hold on; plot(time(yST:yET), rdot_sim2(yST:yET), 'LineWidth', 2), title('Radial Velocity $\dot r_2$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
-subplot(413), plot(time(yST:yET), phaseD3(yST+1300:yET+1300), 'LineWidth', 2); hold on; plot(time(yST:yET), rdot_sim3(yST:yET), 'LineWidth', 2), title('Radial Velocity $\dot r_3$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth','Location','SouthEast'), xlim([107.99, 111.984]);grid on; grid minor;
-subplot(414), plot(time(yST:yET), phaseD4(yST+1300:yET+1300), 'LineWidth', 2); hold on; plot(time(yST:yET), rdot_sim4(yST:yET), 'LineWidth', 2), title('Radial Velocity $\dot r_4$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
+subplot(411), plot(time(yST:yET), phaseD1(yST+1300:yET+1300), 'LineWidth', 2); hold on; plot(time(yST:yET), rdot_sim1_(yST:yET), 'LineWidth', 2), title('Radial Velocity $\dot r_1$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
+subplot(412), plot(time(yST:yET), phaseD2(yST+1300:yET+1300), 'LineWidth', 2); hold on; plot(time(yST:yET), rdot_sim2_(yST:yET), 'LineWidth', 2), title('Radial Velocity $\dot r_2$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
+subplot(413), plot(time(yST:yET), phaseD3(yST+1300:yET+1300), 'LineWidth', 2); hold on; plot(time(yST:yET), rdot_sim3_(yST:yET), 'LineWidth', 2), title('Radial Velocity $\dot r_3$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth','Location','SouthEast'), xlim([107.99, 111.984]);grid on; grid minor;
+subplot(414), plot(time(yST:yET), phaseD4(yST+1300:yET+1300), 'LineWidth', 2); hold on; plot(time(yST:yET), rdot_sim4_(yST:yET), 'LineWidth', 2), title('Radial Velocity $\dot r_4$','interpreter','latex'); xlabel('time[s]'), ylabel('Velocity [m/s]','interpreter','latex'), legend('measurement','ground truth'), xlim([107.99, 111.984]);grid on; grid minor;
 
